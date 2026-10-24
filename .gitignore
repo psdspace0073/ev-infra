@@ -1,0 +1,55 @@
+﻿# Python
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# Secrets
+.env
+.env.*
+!.env.example
+secrets/
+*.pem
+*.key
+
+# Raw and generated data
+data/raw/*
+!data/raw/.gitkeep
+data/interim/*
+!data/interim/.gitkeep
+data/processed/*
+!data/processed/.gitkeep
+data/boundaries/*
+!data/boundaries/.gitkeep
+
+# Large geospatial files and archives
+*.parquet
+*.geoparquet
+*.gpkg
+*.shp
+*.shx
+*.dbf
+*.tif
+*.tiff
+*.zip
+
+# Generated outputs and logs
+outputs/figures/*
+!outputs/figures/.gitkeep
+outputs/maps/*
+!outputs/maps/.gitkeep
+outputs/reports/*
+!outputs/reports/.gitkeep
+logs/*
+!logs/.gitkeep
+
+# Editors and operating system
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
