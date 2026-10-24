@@ -1,0 +1,8 @@
+Metadata-Version: 2.4
+Name: evinfra
+Version: 0.1.0
+Summary: Auditable EV infrastructure decision support prototype
+Requires-Python: >=3.11
+Provides-Extra: dev
+Requires-Dist: pytest>=8; extra == "dev"
+Requires-Dist: ruff>=0.9; extra == "dev"
