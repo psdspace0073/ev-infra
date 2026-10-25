@@ -328,7 +328,8 @@ The steps below control the full schedule. Do these first.
 > | Checklist ID | Register ID | Status |
 > | --- | --- | --- |
 > | S01 VAHAN dashboard | S01 | acquired_provenance_incomplete: statewide calendar-year totals only |
-> | S02 India Data Portal VAHAN | S14 | verified_but_not_acquired: no download URL, licence not specified |
+> | S02 India Data Portal VAHAN | S14; S24 (derived S26) | S14 verified_but_not_acquired (package without files); S24 verified_and_acquired: monthly registrations by RTO and fuel, ODC-BY |
+> | (none) Karnataka Transport Dept monthly statements | S25 | verified_and_acquired: state totals by category; no fuel or RTO split |
 > | S05 MoP state counts | S03 | verified_and_acquired: PIB annexure, Aug 2025 (Karnataka 6,097) |
 > | (none) MHI Lok Sabha reply, 16 Dec 2025 | S17 | verified_and_acquired (Karnataka 6,096) |
 > | S08 OSM chargers | S02, S10 (inventory S11, district join S12) | verified_and_acquired |
@@ -384,17 +385,20 @@ The steps below control the full schedule. Do these first.
 - [ ] F-006 Select the fuel filter. Record the exact names of all electric fuel labels (for example, ELECTRIC(BOV), PURE EV).
 - [ ] F-007 Record the exact names of the hybrid labels (strong hybrid, plug-in hybrid). This closes an open item in the plan.
 - [ ] F-008 Select the years: minimum January 2023 to the latest complete month.
+> **NOTE (25 Oct):** vahan.parivahan.gov.in did not accept connections from the project machine (TCP to port 443 failed; parivahan.gov.in itself answered). Whether the dashboard shows a CAPTCHA is not verified.
+
 - [ ] F-009 Download the table for each RTO, or for the state with an RTO split, if the dashboard allows it.
 - [ ] F-010 If the dashboard shows a CAPTCHA, do the downloads by hand. Do not use an automated tool against the CAPTCHA.
 - [ ] F-011 If the dashboard does not work, download the same data from India Data Portal (S02).
-  > **NOTE (25 Oct):** the India Data Portal VAHAN package (register S14) has no download URL in its CKAN record and its licence is not specified. RTO-level data is not obtained yet.
-- [ ] F-012 Record which source (S01 or S02) gave each file.
-- [ ] F-013 Open each file. Make sure that it has the state, the RTO, the class, the fuel, the month and the count.
-- [ ] F-014 Record the total number of rows.
-- [ ] F-015 Compute the total EV registrations for Karnataka for one year.
-- [ ] F-016 Compare this total with the statewide totals already in the repo (register S01, calendar years 2022–2026). Record the difference. (The Telangana figure 91,572 for FY2025-26 is history only.)
-- [ ] F-017 If the difference is large, record the probable reason (period, classes, fuel labels). Do not change the data.
-- [ ] F-018 Record the latest month that is complete.
+  > **NOTE (25 Oct):** the India Data Portal VAHAN package (register S14) has no download URL in its CKAN record and its licence is not specified.
+  > **UPDATE (25 Oct):** the portal's separate 'vehicle-registrations' package has downloadable CSVs under ODC-BY. 'Registrations by Fuel Type' acquired as register S24; Karnataka table S26.
+- [x] F-012 Record which source (S01 or S02) gave each file. — CC 25 Oct: S02 route (India Data Portal), register S24
+- [ ] F-013 Open each file. Make sure that it has the state, the RTO, the class, the fuel, the month and the count. — S24 has state, RTO, fuel, month and count; vehicle class is NOT crossed with fuel (separate table), so EV by class per RTO is still missing
+- [x] F-014 Record the total number of rows. — 563,642 (all states); 36,198 Karnataka; 67 RTOs; 57 months
+- [x] F-015 Compute the total EV registrations for Karnataka for one year. — Electric(BOV) + Pure EV 2025: 203,625 (S26 summary)
+- [x] F-016 Compare this total with the statewide totals already in the repo (register S01, calendar years 2022–2026). Record the difference. (The Telangana figure 91,572 for FY2025-26 is history only.) — 2022 +1, 2023 −3, 2024 +5, 2025 −68 (−0.03%); 2026 not comparable
+- [x] F-017 If the difference is large, record the probable reason (period, classes, fuel labels). Do not change the data. — differences are small; none large
+- [x] F-018 Record the latest month that is complete. — September 2026 (S24)
 
 ### F.2 VAHAN state totals (S03, for R4-05)
 
@@ -486,7 +490,7 @@ The steps below control the full schedule. Do these first.
 - [ ] F-070 Count the districts. Census 2011 has 30 Karnataka districts; current LGD has 31 (Vijayanagar split from Ballari). Record the boundary year and the split rule.
 - [ ] F-071 Record the DataMeet licence (CC BY 4.0) and the attribution text.
 - [ ] F-072 Download LGD district codes for Karnataka. (In the repo: register S06.)
-- [ ] F-073 Get the list of Karnataka RTOs (KA codes) and their jurisdictions from the Karnataka Transport Department.
+- [ ] F-073 Get the list of Karnataka RTOs (KA codes) and their jurisdictions from the Karnataka Transport Department. — 25 Oct: 67 RTO codes and names from VAHAN (S24) are in `configs/ka_rto_district_crosswalk.csv`; jurisdictions NOT found from any official source (all rows `unresolved`; see docs/research/KA_EV_REGISTRATIONS_REPORT.md)
 - [ ] F-074 Get the list of districts (or circles) served by BESCOM, MESCOM, HESCOM, GESCOM and CESC.
 - [ ] F-075 Record districts or circles that more than one DISCOM serves.
 - [ ] F-076 Record the source and date of each list.
@@ -551,6 +555,7 @@ The steps below control the full schedule. Do these first.
 - [ ] H-008 Save the crosswalk as `/data/resolved/ka_rto_crosswalk_v1.csv`.
 
 > **NOTE:** H.1 needs the KA RTO list (F-073) and the DISCOM lists (F-074). Neither is available yet.
+> **UPDATE (25 Oct):** the crosswalk file is `configs/ka_rto_district_crosswalk.csv` (tracked, not in /data). The S28 build validates it: a row can be `verified_official` only with LGD code, jurisdiction basis, source URL and retrieval date.
 
 ### H.2 Charger records
 

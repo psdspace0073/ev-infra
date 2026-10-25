@@ -112,7 +112,7 @@ One table row is one **charger entry** (type, rating, connector count) at a loca
 
 | Gap | Status |
 | --- | --- |
-| EV registrations by RTO × class × year | Not available. S01 is statewide only; S14 not acquired. Do not split state totals |
+| EV registrations by RTO × class × year | Partly resolved later (S24/S26): EV registrations by RTO and month are available; EV by vehicle class per RTO is still not available. Do not split state totals |
 | RTO jurisdictions and RTO-to-district crosswalk | Not obtained |
 | ESCOM service areas (BESCOM, MESCOM, HESCOM, GESCOM, CESC) | Not obtained. The BEE "Bescom" CPO rows are stations, not service-area evidence |
 | Grid capacity, transformer or substation data | None. Do not infer from proximity |
@@ -126,7 +126,7 @@ The demand model, confidence scoring, optimiser and validation design are unchan
 
 1. Confirm BEE reuse terms for the S15 list, by email to BEE or from the site's terms page, before redistributing any derived file.
 2. Register an Open Charge Map API key and put it in `.env`.
-3. Download RTO-wise EV registrations from the VAHAN dashboard by hand (it has a CAPTCHA).
+3. Download RTO-wise EV registrations from the VAHAN dashboard by hand. (Correction, 25 Oct: the CAPTCHA was assumed, not verified; the dashboard was unreachable from the project machine. RTO-by-month EV data was later acquired from the India Data Portal as S24.)
 4. Record the download URLs for S01, S04 and S20 and check the DataMeet licence.
 5. Find the Lok Sabha question number behind S03 (Aug 2025).
 
