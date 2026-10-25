@@ -2,6 +2,8 @@
 
 Oct 8, 2026 · @anusha · Revision 3: 22 Oct 2026
 
+> **Note (25 Oct 2026):** the pilot geography has changed from Telangana to Karnataka; Telangana is now a future expansion geography. See [ADR-001](../decisions/ADR-001-geography.md). This report is unchanged; its Telangana findings remain as historical reference.
+
 > **Revision 3 (22 Oct 2026)** adds the operating-scope boundary, source-independent confidence scoring, pre-merge source checks, status signals and silent-failure detection, a site-security factor, hybrids in demand, an expanded configuration menu, busy-month sizing, an N-1 corridor resilience check, adoption forecasting with policy scenarios, the data architecture and update pipeline, a delivery tracker with grid-delay flags and a feedback loop, and a privacy and governance section. Summary in "Revision 3" below; details in Formal methods M2, M3, M5, M6 and new M10–M13.
 
 ## Executive verdict

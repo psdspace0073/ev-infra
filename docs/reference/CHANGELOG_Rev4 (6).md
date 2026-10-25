@@ -5,6 +5,8 @@ Planned 22–30 Oct 2026 · Round 1 deadline: **30 Oct 2026** (team leader submi
 
 Base document: `EV_Infra_Green_Mobility_AI_Challenge_Deep-Scan_Report_Rev3.md`
 
+> **Geography change (25 Oct 2026):** the pilot geography is now **Karnataka**; Telangana is a future expansion geography. See [`docs/decisions/ADR-001-geography.md`](../decisions/ADR-001-geography.md). R4-01, R4-02, R4-03, R4-05, R4-06, R4-07, R4-09, R4-11, R4-19 and R4-20 are updated below. Remaining Telangana references are history (review summaries, earlier figures) or describe Telangana's future-expansion role. Methods, scoring, optimiser and validation design do not change.
+
 **Priority:** P0 = must be done before submission · P1 = should be done · P2 = nice to have
 **Owner:** still blank. **Blocker:** assign owners for data, modelling, validation, UI/export and submission before any other work on 24 Oct.
 
@@ -23,7 +25,7 @@ The third review (23 Oct) found definition errors in R4-15 and R4-19: RTO-level 
 | # | Fix | Priority | Due | Owner |
 | --- | --- | --- | --- | --- |
 | R4-01 | Source-access matrix | P0 | 24 Oct | |
-| R4-02 | Download core Telangana datasets | P0 | 24 Oct | |
+| R4-02 | Download core Karnataka datasets | P0 | 24 Oct | |
 | R4-03 | One complete end-to-end join | P0 | 24 Oct | |
 | R4-04 | Label every dataset: verified / planned / synthetic | P0 | 24 Oct | |
 | R4-05 | National state-level CEA calibration | P0 | 26 Oct | |
@@ -32,7 +34,7 @@ The third review (23 Oct) found definition errors in R4-15 and R4-19: RTO-level 
 | R4-08 | Short Round 1 submission | P0 | 29 Oct | |
 | R4-09 | Roadmap with owners, dependencies, cutoffs | P1 | 27 Oct | |
 | R4-10 | "With vs without CEA" comparison | P1 | 27 Oct | |
-| R4-11 | Reproducible Telangana slice: raw files to one proposed site | P0 | 26 Oct | |
+| R4-11 | Reproducible Karnataka slice: raw files to one proposed site | P0 | 26 Oct | |
 | R4-12 | Units on every equation | P1 | 28 Oct | |
 | R4-13 | Wording fixes (confidence scores, "optimal") | P1 | 28 Oct | |
 | R4-14 | Claim audit before submission | P1 | 29 Oct | |
@@ -51,20 +53,23 @@ The third review (23 Oct) found definition errors in R4-15 and R4-19: RTO-level 
 **Why:** The judge's first question will be "show me these datasets exist and can be joined."
 **What:** One table, one row per dataset, with these columns:
 dataset · exact URL · format · geographic level · time period · licence or access limit · status (verified / planned / synthetic) · fallback if unavailable.
-**Covers at minimum:** OSM, Open Charge Map, EV Yatra, MoP state counts, TGREDCO tender list, VAHAN (dashboard or India Data Portal), CEA EVCS report, DataMeet boundaries, WorldPop, IHMCL.
+**Covers at minimum:** OSM, Open Charge Map, EV Yatra, MoP state counts, Karnataka real-plan candidates (reported PM E-DRIVE approvals, BESCOM portal; not verified), VAHAN (dashboard or India Data Portal), CEA EVCS report, DataMeet boundaries, WorldPop, IHMCL.
 **Done when:** every row has been opened and checked by a team member, with the date checked.
 
-### R4-02 · Download core Telangana datasets (P0)
+### R4-02 · Download core Karnataka datasets (P0)
 **What:**
-- Charger records for Telangana from at least 3 sources (OSM, OCM, TGREDCO or state list).
-- VAHAN Telangana EV registrations by RTO × vehicle class × month.
-- CEA rows for TGSPDCL and TGNPDCL.
-- Telangana RTO and district boundaries.
+- Charger records for Karnataka from at least 3 sources (OSM, OCM, state or DISCOM list such as the BESCOM portal, if verified).
+- VAHAN Karnataka EV registrations by RTO (KA codes) × vehicle class × month. **Status:** the file in the repo (S01) holds statewide calendar-year totals only; an RTO × class × month export is not verified to exist. Record the result either way.
+- CEA rows for BESCOM, MESCOM, HESCOM, GESCOM and CESC.
+- Karnataka RTO and district boundaries: 31 current LGD districts vs 30 Census 2011 districts (Vijayanagar split from Ballari).
 
 **Done when:** files are saved in the repo's raw folder with retrieval dates and file hashes, as in the M11 raw layer.
 
+**Status (25 Oct):** OSM done (register S10, inventory S11, district join S12; 67 mapped records, one lineage). Open Charge Map blocked: API key needed (S13). RTO-level VAHAN not obtained: the India Data Portal package has no download URL (S14), and the dashboard needs manual download. CEA rows, RTO list and DISCOM lists not started.
+
 ### R4-03 · One complete end-to-end join (P0)
-**What:** RTO → district/DISCOM → charger records → H3 cells for Telangana, producing one table.
+**What:** RTO (KA codes) → district/DISCOM (BESCOM, MESCOM, HESCOM, GESCOM, CESC) → charger records → H3 cells for Karnataka, producing one table.
+**Blocked:** needs an RTO-level VAHAN export and an RTO jurisdiction list. Until then only the district-level join (S09) exists; no RTO split is invented.
 **Includes:** the first version of the RTO-to-DISCOM crosswalk, built by hand if needed.
 **Done when:** a single query returns, per RTO, the EV count by class, the charger count, and the DISCOM it belongs to.
 
@@ -73,10 +78,10 @@ dataset · exact URL · format · geographic level · time period · licence or 
 **Rule:** UBC, Delhi OpenEV, substation capacity and site-level sessions are **Planned**, never described as working.
 
 ### R4-05 · National state-level CEA calibration (P0) · *missed by the review*
-**Problem:** Telangana has only two DISCOMs, so in the demo state CEA checks just two totals a month. The public-charging rates per vehicle class can only be estimated across many utilities (~55 nationally), which quietly needs VAHAN for every reporting state.
+**Problem:** Karnataka has five DISCOMs (BESCOM, MESCOM, HESCOM, GESCOM, CESC), so in the demo state CEA checks just five totals a month (Telangana, the earlier demo state, has two). The public-charging rates per vehicle class can only be estimated across many utilities (~55 nationally), which quietly needs VAHAN for every reporting state.
 **Fix:**
 - Calibrate public-charging rates **nationally**, using **state-level** VAHAN totals by class for the ~15 CEA-reporting states (easy dashboard downloads).
-- Keep RTO-level detail for **Telangana only**.
+- Keep RTO-level detail for **Karnataka only** (needs an RTO-level VAHAN export, not yet verified).
 - State this split openly in the methodology (update M3).
 
 **Go/no-go check by 26 Oct.** Before committing, confirm:
@@ -85,7 +90,7 @@ dataset · exact URL · format · geographic level · time period · licence or 
 - How missing classes, hybrids and unregistered vehicles are handled (M3 rules).
 - That calibrated rates stay stable when each state is left out once (leave-one-state-out).
 
-**Fallback (no-go):** national calibration becomes a research objective in the roadmap; the submission uses the Telangana-only aggregate check with wide bands, stated openly. No precision is invented to keep the architecture.
+**Fallback (no-go):** national calibration becomes a research objective in the roadmap; the submission uses the Karnataka-only aggregate check with wide bands, stated openly. No precision is invented to keep the architecture.
 
 **Calibration never blocks the core.** It runs in parallel with the join, the map and site selection, and never delays them. If the national rates are unstable in the leave-one-state-out check, report the instability and its size; do not adjust the method until it passes.
 
@@ -96,14 +101,14 @@ dataset · exact URL · format · geographic level · time period · licence or 
 **Fix:** compare all methods on the **same budget** using measures our model does not produce:
 - Share of population within X minutes of a working charger.
 - Registered EVs per RTO within reach of a charger.
-- Overlap with TGREDCO's actual tender sites (reported as agreement, never as accuracy).
+- Overlap with a real published Karnataka site-level plan (reported as agreement, never as accuracy). **Method only / not evaluated:** no verified Karnataka plan is established yet (candidates to check: reported 1,571 PM E-DRIVE approvals, BESCOM portal).
 - Duplication of existing chargers within 1 km.
 - Public cost per site.
 
 **Methods compared:**
 1. A simple baseline (proportional-to-EVs or nearest-demand).
 2. The NITI/WRI grid-cell method.
-3. TGREDCO's real plan.
+3. A real Karnataka plan, if one is verified (otherwise method only / not evaluated).
 4. Our engine.
 
 Our own "demand served" number is reported separately, labelled as model-based. Every metric uses the fixed definitions in R4-19. Update M7 test C.
@@ -112,15 +117,15 @@ Our own "demand served" number is reported separately, labelled as model-based. 
 **What:** run the allocation twice, with and without the CEA calibration, and report how many selected sites change.
 **Why:** this shows whether calibration actually matters for decisions. If it changes nothing, say so honestly. Add as M7 test H.
 
-### R4-11 · Reproducible Telangana slice: raw files to one proposed site (P0)
+### R4-11 · Reproducible Karnataka slice: raw files to one proposed site (P0)
 **Why:** checklist targets are not proof. One reproducible path from raw files to a recommendation is the strongest evidence of execution, and a small working slice beats a national architecture diagram.
 **What the slice must show, end to end:**
 - Source names, retrieval dates and row counts for every input file.
 - A deduplication example: one charger appearing in several sources, with its lineage groups and merged record.
 - One RTO-level result joined to its district/DISCOM and its nearby charger evidence.
-- Reconciled Telangana charger count vs the official 1,063 (state) and 1,173 (OMC annexure) figures. First record what each figure counts: date, stations or charge points, public only or all, installed or operational. The OMC figure (1,173 operational OMC stations) is larger than the state's total (1,063), so the two cannot share a definition; any gap is treated as a definition difference until shown otherwise. Deduplication keeps every record's lineage.
-- EV registrations per RTO by class (observed totals).
-- One CEA comparison chart, labelled a **consistency check**, not validation, because Telangana's DISCOM totals feed the calibration.
+- Reconciled Karnataka charger count vs the official figures: 6,097 public charging stations installed (MoP annexure, in S03; publication date not stated in the file), 6,805 (reported MHI figure, March 2026, **not yet verified**) and the Karnataka OMC values in the Rajya Sabha annexure (**not yet verified**). First record what each figure counts: date, stations or charge points, public only or all, installed or operational. Any gap is treated as a definition or date difference until shown otherwise. Deduplication keeps every record's lineage. (Previous Telangana figures: 1,063 state, 1,173 OMC.)
+- EV registrations per RTO by class (observed totals), if an RTO-level export is obtained; otherwise statewide totals only, with the gap stated.
+- One CEA comparison chart, labelled a **consistency check**, not validation, because Karnataka's DISCOM totals feed the calibration.
 - One proposed site with its rationale, estimated cost split (R4-16), compatibility, uncertainty range and tier label (R4-17).
 - A list of missing fields and the fallback used for each.
 - One map screenshot.
@@ -222,21 +227,21 @@ No site is ever described with a stronger claim than its label. For Round 1 and 
 | EV reach proxy (optional) | RTO EVs × share of the RTO's population within reach, labelled **estimated proxy**, shown under all three spatial priors (M3), never presented as a count |
 | Capacity adequacy | A **separate output** from accessibility: estimated demand vs estimated compatible capacity per zone. Being near a charger is not the same as the charger having room |
 | Duplication | A new site counts as a duplicate if it is within a fixed distance (set before results) of an existing high-confidence charger of the same type |
-| TGREDCO overlap | Share of TGREDCO tender sites within a fixed distance of a recommended site; reported as **agreement with an existing plan**, never as accuracy |
+| Real-plan overlap | Share of sites in a verified published Karnataka site-level plan within a fixed distance of a recommended site; reported as **agreement with an existing plan**, never as accuracy. **Method only / not evaluated** until such a plan is verified (previously: TGREDCO tender sites) |
 | Cost | Public cost per site and per unit of population reached (R4-16) |
 
 ### R4-20 · Deliverable map (P0)
-**Why:** the brief lists Track 1 deliverables (national GIS platform, estimation and recommendation module, dashboard, demo video, methodology, scalability roadmap), while the core is deliberately Telangana-first. One page in the submission shows how each deliverable is covered now and what is promised for the finale.
+**Why:** the brief lists Track 1 deliverables (national GIS platform, estimation and recommendation module, dashboard, demo video, methodology, scalability roadmap), while the core is deliberately Karnataka-first (ADR-001). One page in the submission shows how each deliverable is covered now and what is promised for the finale.
 **Round 1 itself** asks only for team information, a methodology document and an implementation roadmap (official brief). Prototype evidence is supporting material that strengthens feasibility, not a Round 1 requirement.
 
 | Track 1 deliverable | Round 1 evidence | Finale commitment |
 | --- | --- | --- |
-| Web platform / unified view | Architecture and the Telangana slice (R4-11) | Working Telangana planning app |
-| Interactive national GIS map | National data architecture and stated limits | Telangana live; national as a state-by-state pipeline, explained |
+| Web platform / unified view | Architecture and the Karnataka slice (R4-11) | Working Karnataka planning app |
+| Interactive national GIS map | National data architecture and stated limits | Karnataka live; Telangana next; national as a state-by-state pipeline, explained |
 | Methodology document | This submission | Completed methodology with results |
 | Estimation and recommendation module | One reproducible site-selection example | Budget-constrained allocation and proposal export |
 | Decision-support dashboard | Mock-up or screenshot from the slice | Dashboard passing the acceptance test (R4-18) |
-| Demo for one geography | Telangana chosen and justified | Demo video and live demo for Telangana |
+| Demo for one geography | Karnataka chosen and justified (ADR-001) | Demo video and live demo for Karnataka |
 | Scalability roadmap | Roadmap with owners and cutoffs (R4-09) | Updated roadmap with measured solve times |
 
 This is a mapping template, not a claim that any deliverable is complete. Check it against the official brief before submission.
@@ -252,14 +257,14 @@ This is a mapping template, not a claim that any deliverable is complete. Check 
 3. CEA calibration at its real granularity, plus a gap analysis against effective capacity.
 4. Budget-constrained site selection in efficiency and equity modes.
 5. Proposal export with demand, nearby capacity, configuration, cost, coverage gain, confidence and reason per site.
-6. Validation against baselines and TGREDCO, using R4-06 metrics.
+6. Validation against baselines (and a real Karnataka plan only if one is verified), using R4-06 metrics.
 
 **Status of each stage in the submission.** Every core stage carries exactly one status. The target is below; the final column is filled on 29 Oct from what actually runs, and anything not working by then is downgraded to "method only".
 
 | Stage | Target status in Round 1 | Status on 29 Oct |
 | --- | --- | --- |
-| 1. Charger evidence layer | Demonstrated (Telangana, R4-11) | |
-| 2. Demand by class at RTO level | Demonstrated (Telangana) | |
+| 1. Charger evidence layer | Demonstrated (Karnataka, R4-11) | |
+| 2. Demand by class at RTO level | Demonstrated (Karnataka), only if an RTO-level VAHAN export is obtained; otherwise method only | |
 | 3. CEA calibration and gap analysis | Consistency check demonstrated; national calibration method only unless R4-05 passes | |
 | 4. Budget-constrained site selection | One example run demonstrated; equity mode method only | |
 | 5. Proposal export | One site card demonstrated | |
@@ -302,9 +307,9 @@ Labels: **Demonstrated** = runs on real data and is reproducible; **Method only*
 
 | Stage | Owner | Depends on | Build window | Cutoff / fallback |
 | --- | --- | --- | --- | --- |
-| Charger evidence layer | | R4-02 | 8–18 Nov | If dedup is poor by 18 Nov: hand-QA Hyderabad only |
+| Charger evidence layer | | R4-02 | 8–18 Nov | If dedup is poor by 18 Nov: hand-QA Bengaluru Urban only |
 | Demand by class | | R4-03 | 8–15 Nov | Stay at RTO level |
-| CEA calibration | | R4-05 | 12–22 Nov | Telangana-only check with wide bands |
+| CEA calibration | | R4-05 | 12–22 Nov | Karnataka-only check with wide bands |
 | Site selection | | Stages 1–3 | 18 Nov–2 Dec | Efficiency mode only |
 | Proposal export | | Stage 4 | 25 Nov–5 Dec | Static PDF export |
 | Validation | | Stages 1–5 | 1–12 Dec | Baseline comparison only |
@@ -338,7 +343,7 @@ Build weeks: 8 Nov–14 Dec. Finale: 16–18 Dec.
 | Novelty needs measurable proof | M7 test C compares against NITI/WRI, proportional and current deployment | Make metrics non-circular, R4-06 |
 | Kill criteria exist | Build priority and kill-criteria tables | Apply them via R4-07; R4-05 now has its own go/no-go |
 | Candidate vs recommended sites (second review) | M5 deployability tiers and the site ladder (judge Q18) | Make the label visible everywhere, R4-17 |
-| Data leakage in validation (second review) | M7 test A holds out whole states and the last quarter | Telangana CEA chart labelled a consistency check, R4-11 |
+| Data leakage in validation (second review) | M7 test A holds out whole states and the last quarter | Karnataka CEA chart labelled a consistency check, R4-11 |
 
 ---
 
@@ -366,7 +371,7 @@ Build weeks: 8 Nov–14 Dec. Finale: 16–18 Dec.
 ## Go / no-go rule for 29 Oct
 
 **GO** if all of these hold:
-- At least one real, traceable data path from raw sources to a joined Telangana result (R4-11).
+- At least one real, traceable data path from raw sources to a joined Karnataka result (R4-11).
 - A site-selection example that can be reproduced and explained.
 - A written fallback for national calibration if the evidence is weak (R4-05).
 - Validation metrics that claim no more than the data supports (R4-19).

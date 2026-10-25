@@ -1,7 +1,8 @@
 ﻿# EV Infra Map India
 
 A reproducible, evidence-backed EV infrastructure decision-support prototype.
-Initial proof-of-work geography: Telangana.
+Pilot geography: Karnataka. Telangana is a future expansion geography
+(see docs/decisions/ADR-001-geography.md).
 
 ## Development
 
