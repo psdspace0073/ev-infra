@@ -327,14 +327,19 @@ The steps below control the full schedule. Do these first.
 >
 > | Checklist ID | Register ID | Status |
 > | --- | --- | --- |
-> | S01 VAHAN dashboard | S01 | Statewide calendar-year totals only; no register row yet |
-> | S02 India Data Portal VAHAN | S14 | Planned: no download URL, licence not specified |
-> | S05 MoP state counts | S03 | File only; no register row yet |
-> | S08 OSM chargers | S02, S10 (inventory S11, district join S12) | Verified (S10); S02 has no register row |
-> | S09 Open Charge Map | S13 | Planned: API key required (HTTP 403 without key) |
-> | S12 DataMeet boundaries | none (file `data/raw/district_boundaries/`) | File only; no register row yet |
-> | S13 LGD district codes | S06 | Verified |
-> | (none) Census 2011, NFHS, Mission Antyodaya, district table | S04, S07, S08, S09 | S04 file only; S07, S08 verified; S09 derived |
+> | S01 VAHAN dashboard | S01 | acquired_provenance_incomplete: statewide calendar-year totals only |
+> | S02 India Data Portal VAHAN | S14 | verified_but_not_acquired: no download URL, licence not specified |
+> | S05 MoP state counts | S03 | verified_and_acquired: PIB annexure, Aug 2025 (Karnataka 6,097) |
+> | (none) MHI Lok Sabha reply, 16 Dec 2025 | S17 | verified_and_acquired (Karnataka 6,096) |
+> | S08 OSM chargers | S02, S10 (inventory S11, district join S12) | verified_and_acquired |
+> | S09 Open Charge Map | S13 | inaccessible: API key required (HTTP 403 without key) |
+> | S10 BEE / EV Yatra station list | S15 (staging S16, Karnataka rows S18, sites S19) | verified_and_acquired: BEE location-wise PDF, data till 26 Oct 2025 |
+> | S12 DataMeet boundaries | S20 | acquired_provenance_incomplete: download URL and licence not recorded |
+> | S13 LGD district codes | S06 | verified_and_acquired |
+> | S17 OSM roads (partial) | S05 | verified_and_acquired: road centre points only, not a network |
+> | (none) Census 2011, NFHS, Mission Antyodaya, district table | S04, S07, S08, S09 | S04 acquired_provenance_incomplete; S07, S08 verified_and_acquired; S09 derived |
+>
+> Status values: verified_and_acquired, acquired_provenance_incomplete (file held, origin not fully recorded), verified_but_not_acquired, inaccessible, derived. Details: `docs/research/DATA_SOURCE_RECOVERY_REPORT.md`.
 
 ### E.3 Procedure for each source (do E-004 to E-020 for each row)
 
@@ -414,7 +419,8 @@ The steps below control the full schedule. Do these first.
 
 ### F.4 Official counts (S05, S06, S07)
 
-- [ ] F-035 MoP state count annexure: the Karnataka value 6,097 ("public charging stations installed as per inputs received from Ministry of Power", national total 29,277) is in the repo file S03. The file does not state its date. Find the publication date (reported as PIB, August 2025) and record it.
+- [x] F-035 MoP state count annexure: the Karnataka value 6,097 ("public charging stations installed as per inputs received from Ministry of Power", national total 29,277) is in the repo file S03. The file does not state its date. Find the publication date (reported as PIB, August 2025) and record it. — CC 25 Oct: S03 is byte-identical to static.pib.gov.in/.../2025/aug/doc202581598101.pdf (Last-Modified 1 Aug 2025). Question number and reply date still not identified.
+- [x] F-035a MHI Lok Sabha written reply, PIB release 2204635, 16 Dec 2025: Karnataka 6,096 EVCS installed during the last five years (751 fast, 5,345 slow); India 29,151. — CC 25 Oct, register S17
 - [ ] F-036 Download the Rajya Sabha Q.3910 annexure. Record the Karnataka OMC installed and operational values. (Not verified yet.)
 - [ ] F-037 Find the source of the reported Karnataka figure 6,805 (MHI, March 2026). Record the date, the publisher and the definition. Until found, label it "reported, not verified".
 - [ ] F-038 For each count, record: date, stations or charge points, public only or all, installed or operational.
@@ -446,6 +452,8 @@ The steps below control the full schedule. Do these first.
 - [ ] F-054 Remove from use any record whose licence does not allow reuse. Keep it in raw, with a flag.
 
 ### F.7 EV Yatra (S10)
+
+> **NOTE (25 Oct):** the BEE location-wise list (register S15) is acquired: 39,641 rows for India, 8,246 for Karnataka, with coordinates. Its licence is not stated. EV Yatra portal terms are still unchecked.
 
 - [ ] F-055 Open the EV Yatra portal.
 - [ ] F-056 Read the terms of use.

@@ -67,6 +67,8 @@ dataset · exact URL · format · geographic level · time period · licence or 
 
 **Status (25 Oct):** OSM done (register S10, inventory S11, district join S12; 67 mapped records, one lineage). Open Charge Map blocked: API key needed (S13). RTO-level VAHAN not obtained: the India Data Portal package has no download URL (S14), and the dashboard needs manual download. CEA rows, RTO list and DISCOM lists not started.
 
+**Status (25 Oct, data recovery):** BEE location-wise list acquired (register S15, data till 26 Oct 2025): 8,246 Karnataka charger rows; derived station groupings 6,069–6,150 depending on the grouping key; 4,636–6,056 candidate sites (S18, S19). Official totals traced: 6,097 (S03, PIB Aug 2025) and 6,096 (S17, MHI Lok Sabha reply, 16 Dec 2025). The BEE list has no operating status, so it supports installed/listed counts only. See `docs/research/DATA_SOURCE_RECOVERY_REPORT.md`.
+
 ### R4-03 · One complete end-to-end join (P0)
 **What:** RTO (KA codes) → district/DISCOM (BESCOM, MESCOM, HESCOM, GESCOM, CESC) → charger records → H3 cells for Karnataka, producing one table.
 **Blocked:** needs an RTO-level VAHAN export and an RTO jurisdiction list. Until then only the district-level join (S09) exists; no RTO split is invented.

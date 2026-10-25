@@ -11,6 +11,8 @@ dependencies = []
 
 [project.optional-dependencies]
 dev = ["pytest>=8", "ruff>=0.9"]
+# Only for src/evinfra/ingestion/extract_bee_pcs.py (PDF table extraction).
+pdf = ["pdfplumber==0.11.7"]
 
 [tool.setuptools.packages.find]
 where = ["src"]
