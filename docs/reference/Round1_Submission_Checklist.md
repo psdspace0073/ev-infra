@@ -336,7 +336,8 @@ The steps below control the full schedule. Do these first.
 > | S10 BEE / EV Yatra station list | S15 (staging S16, Karnataka rows S18, sites S19) | verified_and_acquired: BEE location-wise PDF, data till 26 Oct 2025 |
 > | S12 DataMeet boundaries | S20 | acquired_provenance_incomplete: download URL and licence not recorded |
 > | S13 LGD district codes | S06 | verified_and_acquired |
-> | S17 OSM roads (partial) | S05 | verified_and_acquired: road centre points only, not a network |
+> | S17 OSM roads | S05; S21 (extract), S23 (layers) | S05 road centre points only; S21 verified_and_acquired (Karnataka PBF); S23 derived roads_major lines |
+> | S18 OSM points of interest | S21, S22 (cross-check), S23 | S23 derived: settlements, amenities, parking, fuel, power, charging stations |
 > | (none) Census 2011, NFHS, Mission Antyodaya, district table | S04, S07, S08, S09 | S04 acquired_provenance_incomplete; S07, S08 verified_and_acquired; S09 derived |
 >
 > Status values: verified_and_acquired, acquired_provenance_incomplete (file held, origin not fully recorded), verified_but_not_acquired, inaccessible, derived. Details: `docs/research/DATA_SOURCE_RECOVERY_REPORT.md`.
@@ -495,10 +496,12 @@ The steps below control the full schedule. Do these first.
 - [ ] F-077 Download the WorldPop population grid for India (latest year available, 100 m).
 - [ ] F-078 Record the year, the method (constrained or unconstrained) and the licence.
 - [ ] F-079 Clip the grid to Karnataka. Save the clip in `04_data_resolved`.
-- [ ] F-080 Download the OSM extract for the India southern zone from Geofabrik.
-- [ ] F-081 Record the extract date.
-- [ ] F-082 Extract points of interest for candidate sites: `amenity=fuel`, government offices, bus stations, metro stations, malls, parking.
-- [ ] F-083 Save each category as a separate file.
+> **NOTE (25 Oct):** a Karnataka-only extract replaces the southern-zone file (register S21, OSM France, data 2026-10-23T02:09:05Z). Layers are in S23. Geofabrik has no state extract.
+
+- [x] F-080 Download the OSM extract for the India southern zone from Geofabrik. — CC 25 Oct: Karnataka extract instead (S21)
+- [x] F-081 Record the extract date. — 2026-10-23T02:09:05Z (S21 manifest)
+- [ ] F-082 Extract points of interest for candidate sites: `amenity=fuel`, government offices, bus stations, metro stations, malls, parking. — partly done: fuel, parking and all other amenities in S23; malls (shop=mall) not extracted yet
+- [x] F-083 Save each category as a separate file. — S23 GeoJSON layers
 
 ### F.11 Policy documents (S19, S20, S21, S22)
 
