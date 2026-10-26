@@ -45,7 +45,9 @@ OUT_MONTHLY = "S28_ka_ev_monthly_state.csv"
 OUT_ANNUAL = "S28_ka_ev_annual_rto.csv"
 OUT_SUMMARY = "S28_summary.json"
 STATE_CODE = "29"
-CROSSWALK_STATUS = {"unresolved", "verified_official"}
+# verified_official_combined: the evidence fixes the office to a group of districts (codes
+# joined by ";"), not to one of them.
+CROSSWALK_STATUS = {"unresolved", "verified_official", "verified_official_combined"}
 CROSSWALK_COLUMNS = [
     "rto_code_vahan",
     "rto_name_vahan",
@@ -106,7 +108,7 @@ def validate_crosswalk(rows: list[dict[str, str]], rto_codes: set[str]) -> dict:
     for r in rows:
         if r["status"] not in CROSSWALK_STATUS:
             raise AnalysisError(f"{r['rto_code_vahan']}: unknown status {r['status']!r}")
-        if r["status"] == "verified_official":
+        if r["status"].startswith("verified_official"):
             missing = [
                 c
                 for c in (
@@ -119,6 +121,12 @@ def validate_crosswalk(rows: list[dict[str, str]], rto_codes: set[str]) -> dict:
             ]
             if missing:
                 raise AnalysisError(f"{r['rto_code_vahan']}: verified row lacks {missing}")
+            combined = r["status"] == "verified_official_combined"
+            if combined != (len(r["lgd_district_code"].split(";")) > 1):
+                raise AnalysisError(
+                    f"{r['rto_code_vahan']}: status {r['status']} does not match district "
+                    f"code {r['lgd_district_code']!r}"
+                )
         elif r["lgd_district_code"]:
             raise AnalysisError(f"{r['rto_code_vahan']}: district given on an unresolved row")
     return dict(sorted(Counter(r["status"] for r in rows).items()))

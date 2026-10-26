@@ -26,6 +26,10 @@ REGISTER_TEXT = {
     "S26": "",
     "S27": "",
     "S28": "",
+    "S29": "",
+    "S30": "",
+    "S32": "",
+    "S35": "",
 }
 
 
@@ -106,7 +110,42 @@ def data():
                 "ev_registrations_district": "",
             },
         ],
-        "crosswalk": [{"status": "unresolved"}, {"status": "unresolved"}],
+        "crosswalk": [
+            {"rto_code_vahan": "KA1", "lgd_district_code": "", "status": "unresolved"},
+            {"rto_code_vahan": "KA2", "lgd_district_code": "", "status": "unresolved"},
+        ],
+        "s35_summary": {
+            "missing_exports": [],
+            "offices": 2,
+            "last_month": "2026-09-30",
+            "vehicle_classes": 2,
+            "class_totals": {"M-CYCLE/SCOOTER": 80, "MOTOR CAR": 20},
+            "rto_month_status": {"equal": 5, "differs": 1},
+            "sum_of_differences": 2,
+            "largest_abs_difference": 2,
+        },
+        "s32": {
+            "bev_triangulation": {
+                "2025": {
+                    "vahan_bev_in_rto_months_missing_from_s24": 70,
+                    "vahan_now_same_months": 1002,
+                    "vahan_now_minus_s01": 2,
+                }
+            },
+            "vahan_minus_official_pct": {
+                "months": 42,
+                "min": 0.05,
+                "median": 1.17,
+                "max": 2.42,
+                "months_vahan_higher": 42,
+            },
+            "missing_status": {"vahan_reports_registrations": 1},
+        },
+        "s35": [
+            {"month_end_date": "2025-03-31", "rto_code": "KA1", "bev_registrations": "6"},
+            {"month_end_date": "2025-04-30", "rto_code": "KA2", "bev_registrations": "3"},
+            {"month_end_date": "2026-01-31", "rto_code": "KA2", "bev_registrations": "50"},
+        ],
         "register": [{"dataset_id": k, "notes": v} for k, v in REGISTER_TEXT.items()],
     }
 
@@ -152,7 +191,9 @@ def test_bev_gap_and_all_fuel_gap_are_separate(data):
     bev = [c for c in by_metric(claims, "bev_new_registrations") if "-68" in c["claim"]]
     fuel = [c for c in by_metric(claims, "all_fuel_new_registrations") if "+2,441" in c["claim"]]
     assert len(bev) == 1 and bev[0]["claim"].startswith("Battery-EV")
-    assert bev[0]["status"] == "unresolved" and "S01" in bev[0]["register_ids"]
+    # explained by the S32 fixture (70 battery-EVs in RTO-months missing from S24)
+    assert bev[0]["status"] == "verified_reproducible" and "S01" in bev[0]["register_ids"]
+    assert "Explained" in bev[0]["caveat"]
     assert len(fuel) == 1 and fuel[0]["claim"].startswith("All-fuel")
     assert "+1.34%" in fuel[0]["claim"] and "S25" in fuel[0]["register_ids"]
     assert "-68" not in fuel[0]["claim"] and "2,441" not in bev[0]["claim"]
@@ -202,3 +243,57 @@ def test_stage3_comparison(tmp_path: Path, data):
     superseded = [c for c in claims if c["status"] == "superseded"]
     assert len(superseded) == 1 and ep.audit(claims, data, ctx) == []
     assert ep.compare_stage3(data["s18_rows"], tmp_path / "missing.csv") is None
+
+
+def test_verified_crosswalk_enables_unit_claims(data):
+    data["crosswalk"] = [
+        {"rto_code_vahan": "KA1", "lgd_district_code": "525", "status": "verified_official"},
+        {
+            "rto_code_vahan": "KA2",
+            "lgd_district_code": "528;738",
+            "status": "verified_official_combined",
+        },
+    ]
+    claims, ctx = ep.build_claims(data, None)
+    assert ep.audit(claims, data, ctx) == []
+    units = {u["unit_lgd_codes"]: u for u in ctx["units"]}
+    assert units["525"]["bev_registrations_2025"] == "6"
+    assert units["528;738"]["bev_registrations_2025"] == "3"  # 2026 row excluded
+    assert units["525"]["bev_2025_per_bee_site"] == "6.0"
+    district = [c for c in claims if c["geography_level"] == "district" and c["topic"] != "supply"]
+    assert district and all(c["status"] == "verified_reproducible" for c in district)
+    district[0]["caveat"] = "no caveat"
+    assert any("office caveat" in e for e in ep.audit(claims, data, ctx))
+
+
+def test_partial_crosswalk_keeps_district_demand_blocked(data):
+    data["crosswalk"][0].update(lgd_district_code="525", status="verified_official")
+    claims, ctx = ep.build_claims(data, None)
+    district = [c for c in claims if c["geography_level"] == "district" and c["topic"] != "supply"]
+    assert all(c["status"] == "not_computable" for c in district)
+    assert ctx["units"] == []
+
+
+def test_s32_and_s35_settle_quality_claims(data):
+    claims, _ = ep.build_claims(data, None)
+    bev_gap = next(c for c in claims if c["claim"].startswith("Battery-EV 2025"))
+    assert bev_gap["status"] == "verified_reproducible" and "Explained" in bev_gap["caveat"]
+    coverage = next(c for c in claims if c["metric"] == "rto_month_coverage")
+    assert coverage["status"] == "verified_reproducible"
+    by_class = next(c for c in claims if c["metric"] == "bev_by_vehicle_class")
+    assert by_class["status"] == "verified_reproducible" and "80.0%" in by_class["claim"]
+    fuel = [c for c in claims if c["metric"] == "all_fuel_new_registrations" and "-" in c["claim"]]
+    assert all("42 of 42 months" in c["caveat"] for c in fuel if "statement" in c["claim"])
+    data["s32"]["bev_triangulation"]["2025"]["vahan_bev_in_rto_months_missing_from_s24"] = 0
+    data["s32"]["missing_status"] = {"no_vahan_evidence": 1}
+    data["s35_summary"]["missing_exports"] = ["KA1_2026"]
+    claims, _ = ep.build_claims(data, None)
+    assert (
+        next(c for c in claims if c["claim"].startswith("Battery-EV 2025"))["status"]
+        == "unresolved"
+    )
+    assert next(c for c in claims if c["metric"] == "rto_month_coverage")["status"] == "unresolved"
+    assert (
+        next(c for c in claims if c["metric"] == "bev_by_vehicle_class")["status"]
+        == "not_computable"
+    )

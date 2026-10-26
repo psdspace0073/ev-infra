@@ -53,7 +53,7 @@ The steps below control the full schedule. Do these first.
 7. Q: write the submission.
 8. U: submit (team leader only).
 
-> **STATUS (26 Oct):** in F, registrations by RTO and month (F.1, except the class breakdown F-013), official counts (F.4), OSM (F.5, F.10 extract) and the BEE list (F.7 note) are done. CEA (F.3), DISCOM lists (F-074), WorldPop (F-077) and policy documents (F.11) are not started. H is blocked at H.1: no RTO has a verified district. Plan: do not wait for H.1. Use charger supply by district (register S18), EV demand at state and RTO level (S26/S28), and state that district demand is not computable. Verified progress, gaps, blockers and the 26–30 Oct priority order: `docs/research/MANUAL_INSPECTION_REVIEW.md`. Figures for the submission: use only the audited claim register in `docs/submission/EVIDENCE_PACKAGE.md`.
+> **STATUS (26 Oct):** in F, registrations by RTO and month (F.1, except the class breakdown F-013), official counts (F.4), OSM (F.5, F.10 extract) and the BEE list (F.7 note) are done. CEA (F.3), DISCOM lists (F-074), WorldPop (F-077) and policy documents (F.11) are not started. H is blocked at H.1: no RTO has a verified district. Update (26 Oct, later): H.1 district grouping done for all 67 RTOs (S30/S31); RTO x class x month battery-EV data acquired (S29/S35); see `docs/research/GAP_CLOSURE_REPORT.md`. Earlier plan: do not wait for H.1. Use charger supply by district (register S18), EV demand at state and RTO level (S26/S28), and state that district demand is not computable. Verified progress, gaps, blockers and the 26–30 Oct priority order: `docs/research/MANUAL_INSPECTION_REVIEW.md`. Figures for the submission: use only the audited claim register in `docs/submission/EVIDENCE_PACKAGE.md`.
 
 > **CAUTION:** The changelog has a review freeze. Do not start a new review round. Accept a new item only if it unblocks the build or fixes a factual error.
 
@@ -381,24 +381,24 @@ The steps below control the full schedule. Do these first.
 
 > **CAUTION:** The VAHAN file in the repo (register S01) has statewide calendar-year totals only (2022–2026). It has no RTO, class or month field. Do not claim that an RTO × vehicle class × month export exists until a member downloads and opens one.
 
-- [ ] F-001 Open the VAHAN dashboard (vahan.parivahan.gov.in/vahan4dashboard).
-- [ ] F-002 Select state: Karnataka.
-- [ ] F-003 Find the RTO filter. Record the list of all Karnataka RTOs that the dashboard shows.
-- [ ] F-004 Record the RTO codes (KA-xx). Record any RTO that the dashboard shows with a different or old code.
-- [ ] F-005 Select the axes: vehicle class (or vehicle category) and month.
-- [ ] F-006 Select the fuel filter. Record the exact names of all electric fuel labels (for example, ELECTRIC(BOV), PURE EV).
-- [ ] F-007 Record the exact names of the hybrid labels (strong hybrid, plug-in hybrid). This closes an open item in the plan.
-- [ ] F-008 Select the years: minimum January 2023 to the latest complete month.
+- [x] F-001 Open the VAHAN dashboard (vahan.parivahan.gov.in/vahan4dashboard). — CC 26 Oct: report view reachable; register S29
+- [x] F-002 Select state: Karnataka. — CC 26 Oct: S29
+- [x] F-003 Find the RTO filter. Record the list of all Karnataka RTOs that the dashboard shows. — CC 26 Oct: 68 offices with VAHAN-4 start dates, in each S29 batch manifest
+- [x] F-004 Record the RTO codes (KA-xx). Record any RTO that the dashboard shows with a different or old code. — CC 26 Oct: same 67 codes as S24, plus KA99 State Transport Authority (no registrations 2021-22)
+- [x] F-005 Select the axes: vehicle class (or vehicle category) and month. — CC 26 Oct: Y = Vehicle Class, X = Month Wise
+- [x] F-006 Select the fuel filter. Record the exact names of all electric fuel labels (for example, ELECTRIC(BOV), PURE EV). — CC 26 Oct: ELECTRIC(BOV) (value 4), PURE EV (23)
+- [x] F-007 Record the exact names of the hybrid labels (strong hybrid, plug-in hybrid). This closes an open item in the plan. — CC 26 Oct: STRONG HYBRID EV (25), PLUG-IN HYBRID EV (26); all labels in the S29 manifests
+- [x] F-008 Select the years: minimum January 2023 to the latest complete month. — CC 26 Oct: calendar years 2022-2026; September 2026 is the latest complete month
 > **NOTE (25 Oct):** vahan.parivahan.gov.in did not accept connections from the project machine (TCP to port 443 failed; parivahan.gov.in itself answered). Whether the dashboard shows a CAPTCHA is not verified.
 > **UPDATE (26 Oct, user-observed, not reproduced here):** on a team member's machine the analytics dashboard (analytics.parivahan.gov.in) loaded once, then did not load data. The tabular report and the 1-/5-year downloads did not open after the CAPTCHA. No export was obtained. Keep the screenshots and an access log.
 
-- [ ] F-009 Download the table for each RTO, or for the state with an RTO split, if the dashboard allows it.
-- [ ] F-010 If the dashboard shows a CAPTCHA, do the downloads by hand. Do not use an automated tool against the CAPTCHA.
+- [x] F-009 Download the table for each RTO, or for the state with an RTO split, if the dashboard allows it. — CC 26 Oct: battery-EV class x month per office and year (S29), table S35
+- [x] F-010 If the dashboard shows a CAPTCHA, do the downloads by hand. Do not use an automated tool against the CAPTCHA. — CC 26 Oct: the report view showed no CAPTCHA; nothing was bypassed
 - [ ] F-011 If the dashboard does not work, download the same data from India Data Portal (S02).
   > **NOTE (25 Oct):** the India Data Portal VAHAN package (register S14) has no download URL in its CKAN record and its licence is not specified.
   > **UPDATE (25 Oct):** the portal's separate 'vehicle-registrations' package has downloadable CSVs under ODC-BY. 'Registrations by Fuel Type' acquired as register S24; Karnataka table S26.
 - [x] F-012 Record which source (S01 or S02) gave each file. — CC 25 Oct: S02 route (India Data Portal), register S24
-- [ ] F-013 Open each file. Make sure that it has the state, the RTO, the class, the fuel, the month and the count. — S24 has state, RTO, fuel, month and count; vehicle class is NOT crossed with fuel (separate table), so EV by class per RTO is still missing
+- [x] F-013 Open each file. Make sure that it has the state, the RTO, the class, the fuel, the month and the count. — S24 has state, RTO, fuel, month and count; vehicle class is NOT crossed with fuel (separate table). — CC 26 Oct: S29 exports have office, class, month and count for the battery-EV fuel filter (recorded in the manifest); S35 checks every RTO-month against S26
 - [x] F-014 Record the total number of rows. — 563,642 (all states); 36,198 Karnataka; 67 RTOs; 57 months
 - [x] F-015 Compute the total EV registrations for Karnataka for one year. — Electric(BOV) + Pure EV 2025: 203,625 (S26 summary)
 - [x] F-016 Compare this total with the statewide totals already in the repo (register S01, calendar years 2022–2026). Record the difference. (The Telangana figure 91,572 for FY2025-26 is history only.) — 2022 +1, 2023 −3, 2024 +5, 2025 −68 (−0.03%); 2026 not comparable
@@ -495,7 +495,7 @@ The steps below control the full schedule. Do these first.
 - [ ] F-070 Count the districts. Census 2011 has 30 Karnataka districts; current LGD has 31 (Vijayanagar split from Ballari). Record the boundary year and the split rule.
 - [ ] F-071 Record the DataMeet licence (CC BY 4.0) and the attribution text.
 - [ ] F-072 Download LGD district codes for Karnataka. (In the repo: register S06.)
-- [ ] F-073 Get the list of Karnataka RTOs (KA codes) and their jurisdictions from the Karnataka Transport Department. — 25 Oct: 67 RTO codes and names from VAHAN (S24) are in `configs/ka_rto_district_crosswalk.csv`; jurisdictions NOT found from any official source (all rows `unresolved`; see docs/research/KA_EV_REGISTRATIONS_REPORT.md)
+- [x] F-073 Get the list of Karnataka RTOs (KA codes) and their jurisdictions from the Karnataka Transport Department. — 25 Oct: 67 RTO codes and names from VAHAN (S24) are in `configs/ka_rto_district_crosswalk.csv`; jurisdictions NOT found from any official source (all rows `unresolved`; see docs/research/KA_EV_REGISTRATIONS_REPORT.md) — CC 26 Oct: district grouping of all 67 offices from the department's Annual Report 2021-22 (S30), checked by exact district totals (S31)
 - [ ] F-074 Get the list of districts (or circles) served by BESCOM, MESCOM, HESCOM, GESCOM and CESC.
 - [ ] F-075 Record districts or circles that more than one DISCOM serves.
 - [ ] F-076 Record the source and date of each list.
@@ -514,12 +514,12 @@ The steps below control the full schedule. Do these first.
 
 ### F.11 Policy documents (S19, S20, S21, S22)
 
-- [ ] F-084 Download the PM E-DRIVE charging infrastructure guidelines from the MHI website.
-- [ ] F-085 Download the MoP EV charging guidelines 2024.
+- [x] F-084 Download the PM E-DRIVE charging infrastructure guidelines from the MHI website. — CC 26 Oct: EV PCS operational guidelines, 26 Sep 2025, and FAQ (S34)
+- [x] F-085 Download the MoP EV charging guidelines 2024. — CC 26 Oct: letter No. 12/2/2018-EV, 17 Sep 2024 (S33)
 - [ ] F-086 Download the Electricity (Rights of Consumers) Amendment Rules 2024.
 - [ ] F-087 Download the NITI / WRI handbook that describes the grid-cell planning method.
 - [ ] F-088 Save each document in `03_data_raw/policy`.
-- [ ] F-089 Record the title, the date and the URL of each document.
+- [ ] F-089 Record the title, the date and the URL of each document. — CC 26 Oct: done for F-084 and F-085 (register S33, S34); F-086 and F-087 not acquired
 
 ### F.12 After all downloads
 
@@ -550,11 +550,11 @@ The steps below control the full schedule. Do these first.
 
 ### H.1 RTO crosswalk
 
-- [ ] H-001 Make a table: RTO code, RTO name, district (LGD code), DISCOM.
+- [ ] H-001 Make a table: RTO code, RTO name, district (LGD code), DISCOM. — CC 26 Oct: district done (`configs/ka_rto_district_crosswalk.csv`); DISCOM not done (not required for Round 1)
 - [ ] H-002 Fill the table from F-073 to F-075.
-- [ ] H-003 Record RTOs that cover more than one district.
-- [ ] H-004 Record districts that have more than one RTO.
-- [ ] H-005 If an RTO maps to more than one district, keep the RTO as the unit. Do not invent a split.
+- [x] H-003 Record RTOs that cover more than one district. — CC 26 Oct: KA7, KA8, KA40, KA67 (Kolar + Chikkaballapura) and KA34, KA35 (Ballari + Vijayanagar) are combined units
+- [x] H-004 Record districts that have more than one RTO. — CC 26 Oct: in the crosswalk and S31 (e.g. Bengaluru Urban 11, Belagavi 6)
+- [x] H-005 If an RTO maps to more than one district, keep the RTO as the unit. Do not invent a split. — CC 26 Oct: combined units are not split
 - [ ] H-006 If an RTO maps to two DISCOMs, record it. Choose a rule and write it in the decision log.
 - [ ] H-007 Get a second member to examine the crosswalk.
 - [ ] H-008 Save the crosswalk as `/data/resolved/ka_rto_crosswalk_v1.csv`.

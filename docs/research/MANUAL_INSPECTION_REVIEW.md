@@ -41,6 +41,8 @@ Verification commands (scripts in a scratch directory, not committed): recompute
 
 ## 3. Remaining gaps
 
+> **UPDATE (26 Oct, later):** see `GAP_CLOSURE_REPORT.md`. G1 closed: 67 of 67 RTOs verified, 6 of them in combined units. G2 closed: S35 from VAHAN exports (S29). G3: S01 metadata is not recoverable, and the −68 is explained (S24 lacks KA45 Nov–Dec 2025). G4 closed: 42 statements reconciled (S32). G5 closed: all 33 RTO-months classified with VAHAN evidence. G6: licence found (BEE Copyright Policy); operational status is still not published. G8: policy documents acquired (S33, S34); CEA, DISCOM areas and WorldPop are not required for Round 1.
+
 | ID | Gap | Effect |
 | --- | --- | --- |
 | G1 | No verified RTO-to-district jurisdiction for any of 67 RTOs | No district-level demand, no registrations-per-charger by district |

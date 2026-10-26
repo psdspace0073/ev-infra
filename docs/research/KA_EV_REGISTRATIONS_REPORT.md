@@ -9,14 +9,16 @@ Date: 25 October 2026 · Branch: `feature/ka-ev-registrations` · Register: S01,
 | India Data Portal "Vehicle Registrations": Registrations by Fuel Type | S24 | Monthly new registrations by state, RTO and fuel type (VAHAN compilation) | Direct CSV, no login; ODC-BY | Acquired |
 | India Data Portal "Vehicle Registrations": Registrations by Vehicle Class | S27 | Same registrations by RTO and vehicle class (all fuels) | Direct CSV, no login; ODC-BY | Acquired (consistency check only) |
 | Karnataka Transport Department, monthly vehicle statements | S25 | State and Bengaluru totals by vehicle category: stock and new registrations. No fuel, no RTO | PDF, no login | Two months acquired |
-| VAHAN dashboard (vahan.parivahan.gov.in/vahan4dashboard) | S01 (earlier statewide export) | The primary source; can show RTO x class x fuel x month on screen | TCP connection to port 443 fails from the project machine (25 Oct, twice); parivahan.gov.in answers. On a team member's machine (26 Oct, user-observed): the analytics dashboard loaded once, then failed to load data; the tabular report and the 1-/5-year downloads did not open after CAPTCHA (see `MANUAL_INSPECTION_REVIEW.md`) | Not reachable here; no export obtained |
+| VAHAN dashboard (vahan.parivahan.gov.in/vahan4dashboard) | S01 (earlier statewide export) | The primary source; can show RTO x class x fuel x month on screen | TCP connection to port 443 fails from the project machine (25 Oct, twice); parivahan.gov.in answers. On a team member's machine (26 Oct, user-observed): the analytics dashboard loaded once, then failed to load data; the tabular report and the 1-/5-year downloads did not open after CAPTCHA (see `MANUAL_INSPECTION_REVIEW.md`) | Reachable on 26 Oct: report-view exports acquired as S29 (no login, no CAPTCHA on the report view) |
 | India Data Portal norm and maker tables | – | Same one-attribute layout (norm, maker) | Checked headers only | Not needed |
 | data.gov.in "KAxx ... Vehicle Newly Registered In The Year 2021-2022" | – | One file per RTO, 2021-22, all fuels (about 1.7 KB each) | Download returns HTTP 403 without the portal's download form or API key; GODL-India | Not acquired |
 | Dataful (dataful.in) VAHAN-derived sets | – | Third-party paid copies | Custom licence | Not used |
 
 Links: [IDP package API](https://ckandev.indiadataportal.com/api/3/action/package_show?id=vehicle-registrations) · [Transport Department monthly statistics](https://transport.karnataka.gov.in/50/Monthwise%20Vehicle%20Statistics%20Report/en)
 
-**No accessible source publishes RTO x month x vehicle class x fuel.** Every IDP table is a single attribute by RTO and month. S24 and S27 must not be combined to estimate EVs by class.
+**No IDP table crosses vehicle class with fuel.** Every IDP table is a single attribute by RTO and month. S24 and S27 must not be combined to estimate EVs by class.
+
+> **UPDATE (26 Oct):** the VAHAN dashboard report view gives battery-EV registrations by RTO x vehicle class x month directly (S29 exports, table S35). See `GAP_CLOSURE_REPORT.md`.
 
 ## 2. Data and definitions
 
@@ -36,9 +38,10 @@ Links: [IDP package API](https://ckandev.indiadataportal.com/api/3/action/packag
 | S24 all-fuel vs official statement (S25), Sep 2026 | 184,194 vs 181,753 (+2,441, +1.3%). By S27 class: non-transport +2,366 (160,062 vs 157,696), transport +75 (24,132 vs 24,057). The gap is almost all non-transport |
 | S24 all-fuel vs official statement, Dec 2025 | 130,751 vs 130,313 from the stock difference (+438, +0.3%) |
 
-**Unresolved:**
-- **2025 BEV gap (−68):** the S01 export's filter settings and date were not recorded, and VAHAN figures can be revised after the month. The gap cannot be located without a fresh dashboard export.
-- **Sep 2026 official gap (+1.3%):** the official statement and the VAHAN dashboard may use different cut-off dates or category rules. This is not determined.
+**Resolved on 26 Oct (S29, S32; details in `GAP_CLOSURE_REPORT.md`):**
+- **2025 BEV gap (−68):** current VAHAN gives 203,698 for 2025 (S01 203,693, +5 later revisions). S24 has 203,625 because it has no rows for KA45 in November and December 2025, where VAHAN shows 45 and 30 battery-EV registrations (75 in total). The −68 is a gap in S24, not in S01.
+- **33 RTO-months without rows:** all classified with VAHAN evidence in `S32_missing_rto_month_register.csv`. KA45 and KA46 months have registrations in VAHAN (missing from S24 only); the KA57 months show zero in VAHAN for every vehicle class.
+- **Official statement gaps (Sep 2026 +1.3%, Dec 2025 +0.3%):** not an S24 defect. The VAHAN dashboard is higher than the Transport Department statement in all 42 comparable months (Apr 2023 to Sep 2026, median +1.17%). The difference is in two-wheelers and cars. The cause (compilation cut-off or rules) is not published.
 
 No total was adjusted to match.
 
@@ -58,12 +61,14 @@ No total was adjusted to match.
 
 ## 5. RTO-to-district crosswalk
 
-`configs/ka_rto_district_crosswalk.csv` lists all 67 VAHAN RTO codes. **All rows are `unresolved`.** A row can become `verified_official` only with an LGD district code, a jurisdiction basis, a source URL and a retrieval date; the S28 build enforces this.
+`configs/ka_rto_district_crosswalk.csv` lists all 67 VAHAN RTO codes. A row can become `verified_official` only with an LGD district code, a jurisdiction basis, a source URL and a retrieval date; the S28 build enforces this.
+
+> **UPDATE (26 Oct):** all 67 rows are verified from the Transport Department's Annual Report 2021-22 (S30): each unit's offices sum exactly to the department's district totals (check S31). 61 RTOs map to one district; KA7, KA8, KA40, KA67 form Kolar + Chikkaballapura and KA34, KA35 form Ballari + Vijayanagar (`verified_official_combined`). Details: `GAP_CLOSURE_REPORT.md` §1. The history below is kept.
 
 Sources tried (25 Oct 2026):
 - **Transport Department site:** there is no office-jurisdiction page, and the contact page has no list.
 - **Parivahan state page:** returns 404.
-- **Transport Department annual reports:** the 2018-19 and 2021-22 mirrors on data.opencity.in now return 404, and the dataset is gone.
+- **Transport Department annual reports:** the 2018-19 and 2021-22 mirrors on data.opencity.in now return 404, and the dataset is gone. (26 Oct: the department's own site still hosts both reports; the 2021-22 report is S30.)
 - **Government of Karnataka contact directory:** rendered client-side, with no transport offices exposed.
 - **Web search:** returned only insurance and aggregator pages, which contradict each other (for example KA-29 and KA-41).
 
@@ -73,12 +78,12 @@ None of these were used. A manual inspection (Stage 2, 26 Oct) found two more le
 
 1. **Statewide:** compare S28 statewide BEV flows with the charger inventory (S15/S18, BEE stations; S11/S23, OSM). This is valid now.
 2. **RTO level:** registrations stay at RTO. A charger can be related to an RTO only through a verified jurisdiction polygon or list. None exists yet, so no charger-per-RTO ratio is produced.
-3. **District level:** allowed only for RTOs whose crosswalk row is `verified_official`. A district total is reported only if **every** RTO serving that district is verified; otherwise it is "not computable". Several VAHAN RTO names refer to Bengaluru or nearby places (for example KA1–KA5 "Bengaluru ...", KA41 Jnanabharathi, KA51 Electronic City). Their district membership is not verified, so they are not grouped into any district or metro total.
+3. **District level:** allowed only for RTOs whose crosswalk row is verified. A district total is reported only if **every** RTO serving that district is verified; otherwise it is "not computable". Combined units (Kolar + Chikkaballapura; Ballari + Vijayanagar) are reported only as units. District totals describe the **registering office**: S30 §3.3 allows Vahan applications at any office in Karnataka, irrespective of residence or business.
 4. **Never:** split RTO or state totals by population, roads or names. Never treat registrations as vehicle locations (R4-19). Never use S24/S27 to infer an EV vehicle-class mix.
 
 ## 7. Manual VAHAN export (needs a network that can reach the dashboard)
 
-> The control names below follow the dashboard's usual layout. They could **not** be checked from the project machine (the site is unreachable), so adjust them to what the page actually shows and record the real labels.
+> **UPDATE (26 Oct):** done by script: `src/evinfra/ingestion/fetch_vahan_dashboard.py` (S29). The report view had no CAPTCHA. The labels below were confirmed on the page; files are saved as `data/raw/S29_vahan_dashboard_ka_<job>_<date>/<RTO>_<year>.xlsx` with a batch manifest.
 
 1. Open https://vahan.parivahan.gov.in/vahan4dashboard/ and go to the report view.
 2. Set the type to "Actual Value", the state to "Karnataka", the RTO to one office (repeat for each), the Y-axis to "Vehicle Class", the X-axis to "Month Wise", and the year to the calendar year (repeat for 2022 to 2026).
@@ -89,9 +94,7 @@ None of these were used. A manual inspection (Stage 2, 26 Oct) found two more le
 
 ## 8. Next priority
 
-Updated 26 Oct after the manual inspection review; the full plan is in `docs/research/MANUAL_INSPECTION_REVIEW.md` §5.
+Updated 26 Oct after the gap closure (`docs/research/GAP_CLOSURE_REPORT.md`). Items 2–4 of the previous list are done.
 
-1. **Freeze the submission geography:** charger supply by district (S18), EV demand at state and RTO level (S26/S28), district demand "not computable" until the crosswalk is verified.
-2. **Acquire the remaining S25 monthly statements** (listed Apr 2024 to Sep 2026) and reconcile S24 monthly all-fuel totals. Do not adjust S24.
-3. **One more manual VAHAN export attempt (section 7)** on a different network or browser, with an access log. It is needed for BEV by vehicle class at RTO level and to explain the 2025 BEV −68.
-4. **Official RTO jurisdiction list:** request it from the Transport Department, for example through its contact or RTI channel, or find the gazette notifications that created each RTO and ARTO. Then fill `verified_official` rows with sources.
+1. **Use S35 for demand by vehicle class** (RTO x class x month, battery-EV) and the district-unit table of the evidence package for district demand, always with the registering-office caveat.
+2. **Ask the Transport Department how the monthly statements are compiled** (for example by RTI) if the VAHAN-vs-statement offset must be explained; until then report it as a measured, systematic difference.

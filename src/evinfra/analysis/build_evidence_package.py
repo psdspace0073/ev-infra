@@ -63,6 +63,9 @@ INPUTS = {
     "s18_rows": PROC / "S18_karnataka_bee_pcs_rows.csv",
     "s19_sites": PROC / "S19_karnataka_bee_pcs_sites.csv",
     "s12_join": PROC / "S12_karnataka_district_charger_join.csv",
+    "s35_long": PROC / "S35_ka_bev_rto_class_month.csv",
+    "s35_summary": PROC / "S35_summary.json",
+    "s32_summary": PROC / "S32_summary.json",
     "crosswalk": CROSSWALK,
     "register": REGISTER,
 }
@@ -130,6 +133,9 @@ def load(paths: dict[str, Path]) -> dict:
         "s18_rows": bdt.read_csv(paths["s18_rows"]),
         "s19_sites": bdt.read_csv(paths["s19_sites"]),
         "s12": bdt.read_csv(paths["s12_join"]),
+        "s35": bdt.read_csv(paths["s35_long"]),
+        "s35_summary": read_json(paths["s35_summary"]),
+        "s32": read_json(paths["s32_summary"]),
         "crosswalk": bdt.read_csv(paths["crosswalk"]),
         "register": bdt.read_csv(paths["register"]),
     }
@@ -160,6 +166,59 @@ def compare_stage3(s18_rows: list[dict[str, str]], stage3: Path | None) -> dict 
     }
 
 
+UNIT_COLUMNS = [
+    "unit_lgd_codes",
+    "unit_name",
+    "rto_codes",
+    "bev_registrations_2025",
+    "bee_rows_by_point",
+    "bee_candidate_sites_by_point",
+    "bev_2025_per_bee_site",
+]
+UNIT_YEAR = "2025"
+CAVEAT_OFFICE = (
+    "Registration office geography, not owner residence: Vahan applications may be filed "
+    "at any office in Karnataka (S30 section 3.3). Grouping as in the Transport "
+    "Department's 2021-22 district statistics (check S31)."
+)
+
+
+def is_verified(row: dict[str, str]) -> bool:
+    return row["status"].startswith("verified_official")
+
+
+def district_units(data: dict) -> list[dict[str, str]]:
+    """One row per crosswalk unit (one LGD code, or several joined by ';')."""
+    names = {r["lgd_district_code"]: r["lgd_district_name"] for r in data["s12"]}
+    rows_by = Counter(r["lgd_district_code_by_point"] for r in data["s18_rows"])
+    sites_by = Counter(r["lgd_district_code_by_point"] for r in data["s19_sites"])
+    bev_by_rto: Counter = Counter()
+    for r in data["s35"]:
+        if r["month_end_date"].startswith(UNIT_YEAR):
+            bev_by_rto[r["rto_code"]] += int(r["bev_registrations"])
+    units: dict[str, list[str]] = {}
+    for r in data["crosswalk"]:
+        if is_verified(r):
+            units.setdefault(r["lgd_district_code"], []).append(r["rto_code_vahan"])
+    out = []
+    for unit, rtos in units.items():
+        codes = unit.split(";")
+        bev = sum(bev_by_rto[c] for c in rtos)
+        sites = sum(sites_by.get(c, 0) for c in codes)
+        out.append(
+            {
+                "unit_lgd_codes": unit,
+                "unit_name": " + ".join(names.get(c, c) for c in codes),
+                "rto_codes": " ".join(sorted(rtos, key=lambda c: int(c[2:]))),
+                "bev_registrations_2025": str(bev),
+                "bee_rows_by_point": str(sum(rows_by.get(c, 0) for c in codes)),
+                "bee_candidate_sites_by_point": str(sites),
+                "bev_2025_per_bee_site": f"{bev / sites:.1f}" if sites else "",
+            }
+        )
+    return sorted(out, key=lambda r: -int(r["bev_registrations_2025"]))
+
+
 def district_supply(data: dict, verified_rtos: int) -> list[dict[str, str]]:
     rows_by = Counter(r["lgd_district_code_by_point"] for r in data["s18_rows"])
     sites_by = Counter(r["lgd_district_code_by_point"] for r in data["s19_sites"])
@@ -175,7 +234,9 @@ def district_supply(data: dict, verified_rtos: int) -> list[dict[str, str]]:
                 "osm_mapped_records": d["osm_mapped_charging_records"],
                 "ev_registrations": "",
                 "ev_registrations_status": (
-                    "not_computable: RTO-to-district crosswalk has "
+                    "see district_unit_bev_supply.csv (registrations by district unit)"
+                    if verified_rtos == len(data["crosswalk"])
+                    else "not_computable: RTO-to-district crosswalk has "
                     f"{verified_rtos} of {len(data['crosswalk'])} RTOs verified"
                 ),
             }
@@ -186,8 +247,10 @@ def district_supply(data: dict, verified_rtos: int) -> list[dict[str, str]]:
 def build_claims(data: dict, stage3: dict | None) -> tuple[list[dict[str, str]], dict]:
     s26, s28, s18 = data["s26"], data["s28"], data["s18"]
     monthly, annual = data["monthly"], data["annual"]
-    verified_rtos = sum(1 for r in data["crosswalk"] if r["status"] == "verified_official")
+    verified_rtos = sum(1 for r in data["crosswalk"] if is_verified(r))
+    complete = verified_rtos == len(data["crosswalk"])
     supply = district_supply(data, verified_rtos)
+    units = district_units(data) if complete else []
     claims: list[dict[str, str]] = []
 
     def add(topic, metric, level, claim, ids, derivation, status, caveat=""):
@@ -272,7 +335,26 @@ def build_claims(data: dict, stage3: dict | None) -> tuple[list[dict[str, str]],
         chk = s26["s01_cross_check"][y]
         if "difference" not in chk:
             continue
-        status = "unresolved" if abs(chk["difference"]) > 10 else "verified_reproducible"
+        tri = data["s32"]["bev_triangulation"].get(y, {})
+        in_missing = tri.get("vahan_bev_in_rto_months_missing_from_s24", 0)
+        explained = abs(chk["difference"]) > 10 and abs(chk["difference"] + in_missing) <= 10
+        status = (
+            "verified_reproducible" if abs(chk["difference"]) <= 10 or explained else "unresolved"
+        )
+        if explained:
+            caveat = (
+                f"Battery-EV only. Explained (S32): S24 has no rows for RTO-months in which the "
+                f"VAHAN dashboard now shows {in_missing} battery-EV registrations; current VAHAN "
+                f"{n(tri['vahan_now_same_months'])} vs the S01 export "
+                f"{tri['vahan_now_minus_s01']:+} (later revisions)."
+            )
+        elif status == "unresolved":
+            caveat = (
+                "Battery-EV only; not an all-fuel comparison. The S01 export date and filter "
+                "settings were not recorded, so the cause cannot be located."
+            )
+        else:
+            caveat = "Battery-EV only."
         add(
             "data_quality",
             "bev_new_registrations",
@@ -280,14 +362,13 @@ def build_claims(data: dict, stage3: dict | None) -> tuple[list[dict[str, str]],
             f"Battery-EV {y}: VAHAN compilation {n(chk['s26_bev'])} vs VAHAN dashboard export "
             f"{n(chk['s01_bev'])} (difference {chk['difference']:+,}, "
             f"{chk['difference_pct']:+.3f}%).",
-            "S01; S24; S26",
-            f"S26_summary.json: s01_cross_check.{y}",
+            "S01; S24; S26; S29; S32" if explained else "S01; S24; S26",
+            f"S26_summary.json: s01_cross_check.{y}"
+            + ("; S32_summary.json: bev_triangulation" if explained else ""),
             status,
-            "Battery-EV only; not an all-fuel comparison. The S01 export date and filter "
-            "settings were not recorded, so the cause cannot be located."
-            if status == "unresolved"
-            else "Battery-EV only.",
+            caveat,
         )
+    offset = data["s32"]["vahan_minus_official_pct"]
     for month, key in (
         ("2026-09-30", "S25_sep_2026_new_registrations"),
         ("2025-12-31", "S25_dec_2025_new_registrations"),
@@ -301,14 +382,17 @@ def build_claims(data: dict, stage3: dict | None) -> tuple[list[dict[str, str]],
             f"All-fuel new registrations {month[:7]}: VAHAN compilation {n(ours)} vs "
             f"Transport Department statement {n(official)} (difference {ours - official:+,}, "
             f"{pct(ours - official, official)} of the official value).",
-            "S24; S25; S28",
+            "S24; S25; S28; S29; S32",
             f"S28_ka_ev_monthly_state.csv: all_fuel_total {month}; S25 value transcribed "
-            "from PDF (register S25)",
+            "from PDF (register S25); S32_summary.json: vahan_minus_official_pct",
             "unresolved",
-            "All fuels, not battery-EV. Cut-off dates or category rules may differ; not "
-            "determined. No total was adjusted.",
+            "All fuels, not battery-EV. A systematic difference: the VAHAN dashboard exceeds "
+            f"the statements in {offset['months_vahan_higher']} of {offset['months']} months "
+            f"({offset['min']}% to {offset['max']}%, median {offset['median']}%; S32). The "
+            "cause (compilation cut-off or rules) is not published. No total was adjusted.",
         )
     by_rto = s28["rto_months_without_rows_by_rto"]
+    missing_status = data["s32"]["missing_status"]
     add(
         "data_quality",
         "rto_month_coverage",
@@ -316,10 +400,14 @@ def build_claims(data: dict, stage3: dict | None) -> tuple[list[dict[str, str]],
         f"{s28['rto_months_without_rows']} RTO-months have no published rows ("
         + ", ".join(f"{k} {v}" for k, v in sorted(by_rto.items()))
         + "); they are absent in both the fuel and class tables and are kept blank.",
-        "S24; S26; S27; S28",
-        "S28_summary.json: rto_months_without_rows_by_rto, s24_vs_s27_consistency",
-        "unresolved",
-        "Zero or unreported cannot be determined; never set to 0.",
+        "S24; S26; S27; S28; S29; S32",
+        "S28_summary.json: rto_months_without_rows_by_rto; S32_missing_rto_month_register.csv",
+        "unresolved" if "no_vahan_evidence" in missing_status else "verified_reproducible",
+        "Classified with VAHAN dashboard evidence (S32): "
+        + "; ".join(f"{k} {v}" for k, v in sorted(missing_status.items()))
+        + ". 'vahan_reports_registrations' months are absent from S24 only; "
+        "'vahan_reports_zero' months show 0 for every vehicle class. Kept blank in S26; "
+        "never imputed.",
     )
     cons = s28["s24_vs_s27_consistency"]
     add(
@@ -337,17 +425,41 @@ def build_claims(data: dict, stage3: dict | None) -> tuple[list[dict[str, str]],
             if d["s27_class_total"] is None
         ),
     )
-    add(
-        "demand",
-        "bev_by_vehicle_class",
-        "rto",
-        "Battery-EV registrations by vehicle class at RTO level cannot be produced: no "
-        "accessible source crosses class with fuel by RTO and month.",
-        "S01; S24; S27",
-        "Source review (docs/research/KA_EV_REGISTRATIONS_REPORT.md)",
-        "not_computable",
-        "Needs a manual VAHAN dashboard export; access failed on 25-26 Oct.",
-    )
+    s35 = data["s35_summary"]
+    if s35.get("missing_exports") == []:
+        total = sum(s35["class_totals"].values())
+        status_count = s35["rto_month_status"]
+        add(
+            "demand",
+            "bev_by_vehicle_class",
+            "rto",
+            f"Battery-EV registrations by vehicle class are available for {s35['offices']} "
+            f"offices by month to {s35['last_month'][:7]} ({s35['vehicle_classes']} vehicle "
+            "classes); largest classes over the period: "
+            + "; ".join(
+                f"{k} {100 * v / total:.1f}%" for k, v in list(s35["class_totals"].items())[:3]
+            )
+            + ".",
+            "S29; S35",
+            "S35_summary.json: class_totals, rto_month_status",
+            "verified_reproducible",
+            f"Per RTO-month the VAHAN total equals S26 in {n(status_count.get('equal', 0))} and "
+            f"differs in {n(status_count.get('differs', 0))} (net {s35['sum_of_differences']:+}, "
+            f"largest {s35['largest_abs_difference']}; later revisions). Registering office, "
+            "not owner location.",
+        )
+    else:
+        add(
+            "demand",
+            "bev_by_vehicle_class",
+            "rto",
+            "Battery-EV registrations by vehicle class at RTO level are not complete: "
+            f"{len(s35.get('missing_exports', ['?']))} VAHAN exports missing.",
+            "S29; S35",
+            "S35_summary.json: missing_exports",
+            "not_computable",
+            "Complete the S29 bev_class_month batch and rebuild S35.",
+        )
 
     # Charging supply
     add(
@@ -430,39 +542,88 @@ def build_claims(data: dict, stage3: dict | None) -> tuple[list[dict[str, str]],
     )
 
     # Geography
+    combined = [u for u in units if ";" in u["unit_lgd_codes"]]
+    single = sum(len(u["rto_codes"].split()) for u in units if u not in combined)
     add(
         "geography",
         "rto_district_crosswalk",
         "rto",
-        f"{verified_rtos} of {len(data['crosswalk'])} RTOs have a verified district.",
-        "S24",
-        "configs/ka_rto_district_crosswalk.csv: status",
-        "verified_reproducible" if verified_rtos else "unresolved",
-        "A row becomes verified only with an LGD code, jurisdiction basis, source URL and "
-        "retrieval date. Office names and addresses are not jurisdiction evidence.",
+        f"{verified_rtos} of {len(data['crosswalk'])} RTOs have a verified district grouping"
+        + (
+            f": {single} map to one district; "
+            + "; ".join(
+                f"{u['rto_codes'].replace(' ', ', ')} to {u['unit_name']}" for u in combined
+            )
+            + "."
+            if complete
+            else "."
+        ),
+        "S24; S29; S30",
+        "configs/ka_rto_district_crosswalk.csv: status; check S31_rto_district_grouping_check.json",
+        "verified_reproducible" if complete else "unresolved",
+        "Each unit's offices sum exactly to the Transport Department's district totals "
+        "(31-03-2021 stock and 2021-22 new registrations). Office names and addresses are not "
+        "used as evidence. Combined units are not split.",
     )
-    add(
-        "demand",
-        "bev_new_registrations",
-        "district",
-        "Battery-EV registrations by district are not computable.",
-        "S26",
-        "configs/ka_rto_district_crosswalk.csv",
-        "not_computable" if verified_rtos < len(data["crosswalk"]) else "verified_reproducible",
-        "Registrations are by RTO; they are not split by population, area or name.",
-    )
-    add(
-        "gap",
-        "registrations_per_charger",
-        "district",
-        "Registrations per charger by district, and any district gap ranking that uses "
-        "registrations, are not computable.",
-        "S18; S26",
-        "Depends on the district demand claim above",
-        "not_computable" if verified_rtos < len(data["crosswalk"]) else "verified_reproducible",
-        "Gap analysis can be shown at state level, or with supply-only district indicators.",
-    )
-    return claims, {"supply": supply, "verified_rtos": verified_rtos}
+    if complete:
+        total = sum(int(u["bev_registrations_2025"]) for u in units)
+        add(
+            "demand",
+            "bev_new_registrations",
+            "district",
+            f"Battery-EV registrations in {UNIT_YEAR} by district unit ({len(units)} units, "
+            f"{n(total)} in total), largest: "
+            + "; ".join(
+                f"{u['unit_name']} {n(int(u['bev_registrations_2025']))} "
+                f"({100 * int(u['bev_registrations_2025']) / total:.1f}%)"
+                for u in units[:3]
+            )
+            + ".",
+            "S29; S30; S35",
+            "S35_ka_bev_rto_class_month.csv summed by crosswalk unit",
+            "verified_reproducible",
+            CAVEAT_OFFICE,
+        )
+        ranked = sorted(
+            (u for u in units if u["bev_2025_per_bee_site"]),
+            key=lambda u: -float(u["bev_2025_per_bee_site"]),
+        )
+        add(
+            "gap",
+            "registrations_per_charger",
+            "district",
+            f"{UNIT_YEAR} battery-EV registrations per BEE candidate site by district unit range "
+            f"from {ranked[-1]['bev_2025_per_bee_site']} ({ranked[-1]['unit_name']}) to "
+            f"{ranked[0]['bev_2025_per_bee_site']} ({ranked[0]['unit_name']}).",
+            "S19; S29; S30; S35",
+            "district_unit_bev_supply.csv: bev_2025_per_bee_site",
+            "verified_reproducible",
+            "A screening indicator, not adequacy: new registrations in one year over installed "
+            "(not necessarily operational) sites. " + CAVEAT_OFFICE,
+        )
+    else:
+        add(
+            "demand",
+            "bev_new_registrations",
+            "district",
+            "Battery-EV registrations by district are not computable.",
+            "S26",
+            "configs/ka_rto_district_crosswalk.csv",
+            "not_computable",
+            "Registrations are by RTO; they are not split by population, area or name.",
+        )
+        add(
+            "gap",
+            "registrations_per_charger",
+            "district",
+            "Registrations per charger by district, and any district gap ranking that uses "
+            "registrations, are not computable.",
+            "S18; S26",
+            "Depends on the district demand claim above",
+            "not_computable",
+            "Gap analysis can be shown at state level, or with supply-only district indicators.",
+        )
+    return claims, {"supply": supply, "units": units, "verified_rtos": verified_rtos}
 
 
 def audit(claims: list[dict[str, str]], data: dict, context: dict) -> list[str]:
@@ -483,13 +644,12 @@ def audit(claims: list[dict[str, str]], data: dict, context: dict) -> list[str]:
             for fig in SUPERSEDED_FIGURES:
                 if fig in c["claim"]:
                     errors.append(f"{c['claim_id']}: superseded figure {fig} cited")
-        if (
-            context["verified_rtos"] == 0
-            and c["geography_level"] == "district"
-            and c["topic"] in {"demand", "gap"}
-            and c["status"] != "not_computable"
-        ):
-            errors.append(f"{c['claim_id']}: district demand claim without verified crosswalk")
+        district_demand = c["geography_level"] == "district" and c["topic"] in {"demand", "gap"}
+        if district_demand and c["status"] != "not_computable":
+            if context["verified_rtos"] < len(data["crosswalk"]):
+                errors.append(f"{c['claim_id']}: district demand claim without verified crosswalk")
+            elif "Registration office geography" not in c["caveat"]:
+                errors.append(f"{c['claim_id']}: district demand claim lacks the office caveat")
         if c["topic"] == "data_quality" and "difference" in c["claim"]:
             expected = {
                 "bev_new_registrations": "Battery-EV",
@@ -500,8 +660,12 @@ def audit(claims: list[dict[str, str]], data: dict, context: dict) -> list[str]:
     for name, (rid, value) in OFFICIAL.items():
         if n(value) not in register_text.get(rid, ""):
             errors.append(f"{name}: {n(value)} not found in register row {rid}")
-    if any(r["ev_registrations_district"] for r in data["s12"]) and not context["verified_rtos"]:
-        errors.append("S12 has district EV registrations although no RTO is verified")
+    if any(r["ev_registrations_district"] for r in data["s12"]):
+        errors.append("S12 has district EV registrations; they belong in the unit table")
+    if context["units"]:
+        in_units = sum(int(u["bee_rows_by_point"]) for u in context["units"])
+        if in_units != data["s18"]["rows_with_point_district"]:
+            errors.append(f"district units hold {in_units} BEE rows, not all point-district rows")
     in_districts = sum(int(r["bee_rows_by_point"]) for r in context["supply"])
     if in_districts != data["s18"]["rows_with_point_district"]:
         errors.append(
@@ -528,6 +692,7 @@ def main(argv: list[str] | None = None) -> int:
     outputs = {
         "claim_register.csv": claim_bytes,
         "district_charger_supply.csv": bdt.to_csv_bytes(SUPPLY_COLUMNS, context["supply"]),
+        "district_unit_bev_supply.csv": bdt.to_csv_bytes(UNIT_COLUMNS, context["units"]),
     }
     report = {
         "inputs_sha256": {

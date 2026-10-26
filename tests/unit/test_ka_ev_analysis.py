@@ -187,6 +187,47 @@ def test_crosswalk_verified_rows_need_evidence(inputs, tmp_path):
     }
 
 
+def test_crosswalk_combined_status_needs_several_districts(inputs, tmp_path):
+    s26, s27, _ = inputs
+    evidence = {
+        "jurisdiction_basis": "district totals",
+        "source_url": "https://example.gov.in/x",
+        "source_retrieved_at": "2026-10-26",
+    }
+    single = write(
+        tmp_path / "a.csv",
+        ana.CROSSWALK_COLUMNS,
+        [
+            xw_row("KA1", "verified_official_combined", lgd_district_code="542", **evidence),
+            xw_row("KA2"),
+        ],
+    )
+    with pytest.raises(ana.AnalysisError, match="does not match district"):
+        ana.build(s26, s27, single)
+    several = write(
+        tmp_path / "b.csv",
+        ana.CROSSWALK_COLUMNS,
+        [
+            xw_row("KA1", "verified_official", lgd_district_code="542;630", **evidence),
+            xw_row("KA2"),
+        ],
+    )
+    with pytest.raises(ana.AnalysisError, match="does not match district"):
+        ana.build(s26, s27, several)
+    ok = write(
+        tmp_path / "c.csv",
+        ana.CROSSWALK_COLUMNS,
+        [
+            xw_row("KA1", "verified_official_combined", lgd_district_code="542;630", **evidence),
+            xw_row("KA2"),
+        ],
+    )
+    assert ana.build(s26, s27, ok)[2]["crosswalk_status"] == {
+        "unresolved": 1,
+        "verified_official_combined": 1,
+    }
+
+
 def test_unknown_crosswalk_status_raises(inputs, tmp_path):
     s26, s27, _ = inputs
     xw = write(tmp_path / "x.csv", ana.CROSSWALK_COLUMNS, [xw_row("KA1", "guessed"), xw_row("KA2")])
