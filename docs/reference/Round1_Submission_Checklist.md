@@ -53,6 +53,8 @@ The steps below control the full schedule. Do these first.
 7. Q: write the submission.
 8. U: submit (team leader only).
 
+> **STATUS (26 Oct):** in F, registrations by RTO and month (F.1, except the class breakdown F-013), official counts (F.4), OSM (F.5, F.10 extract) and the BEE list (F.7 note) are done. CEA (F.3), DISCOM lists (F-074), WorldPop (F-077) and policy documents (F.11) are not started. H is blocked at H.1: no RTO has a verified district. Plan: do not wait for H.1. Use charger supply by district (register S18), EV demand at state and RTO level (S26/S28), and state that district demand is not computable. Verified progress, gaps, blockers and the 26–30 Oct priority order: `docs/research/MANUAL_INSPECTION_REVIEW.md`.
+
 > **CAUTION:** The changelog has a review freeze. Do not start a new review round. Accept a new item only if it unblocks the build or fixes a factual error.
 
 ---
@@ -386,6 +388,7 @@ The steps below control the full schedule. Do these first.
 - [ ] F-007 Record the exact names of the hybrid labels (strong hybrid, plug-in hybrid). This closes an open item in the plan.
 - [ ] F-008 Select the years: minimum January 2023 to the latest complete month.
 > **NOTE (25 Oct):** vahan.parivahan.gov.in did not accept connections from the project machine (TCP to port 443 failed; parivahan.gov.in itself answered). Whether the dashboard shows a CAPTCHA is not verified.
+> **UPDATE (26 Oct, user-observed, not reproduced here):** on a team member's machine the analytics dashboard (analytics.parivahan.gov.in) loaded once, then did not load data. The tabular report and the 1-/5-year downloads did not open after the CAPTCHA. No export was obtained. Keep the screenshots and an access log.
 
 - [ ] F-009 Download the table for each RTO, or for the state with an RTO split, if the dashboard allows it.
 - [ ] F-010 If the dashboard shows a CAPTCHA, do the downloads by hand. Do not use an automated tool against the CAPTCHA.
@@ -556,6 +559,7 @@ The steps below control the full schedule. Do these first.
 
 > **NOTE:** H.1 needs the KA RTO list (F-073) and the DISCOM lists (F-074). Neither is available yet.
 > **UPDATE (25 Oct):** the crosswalk file is `configs/ka_rto_district_crosswalk.csv` (tracked, not in /data). The S28 build validates it: a row can be `verified_official` only with LGD code, jurisdiction basis, source URL and retrieval date.
+> **UPDATE (26 Oct):** a manual Stage 2 evidence register has the same 67 RTOs, all `unresolved`. Its two leads (Karwar KA30, Tumakuru) are office pages, not jurisdiction records. H-001 to H-008 stay open; see `docs/research/MANUAL_INSPECTION_REVIEW.md`.
 
 ### H.2 Charger records
 
@@ -575,6 +579,8 @@ The steps below control the full schedule. Do these first.
 - [ ] H-017 Record the compatibility state per vehicle type: confirmed, confirmed not, or unknown.
 - [ ] H-018 Save the merged table as `/data/resolved/ka_charger_sites_v1.parquet`.
 - [ ] H-019 Record the count of merged sites.
+
+> **CAUTION (26 Oct):** a manual Stage 3 extraction of the BEE PDF gives 6,113 Karnataka records. It is incomplete: register S18 has 8,246 rows from the same PDF, and 2,349 of them have no Stage 3 match. Use S18 and S19. Do not cite 6,113.
 
 ### H.3 Join to geography and demand
 

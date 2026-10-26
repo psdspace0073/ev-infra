@@ -9,7 +9,7 @@ Date: 25 October 2026 · Branch: `feature/ka-ev-registrations` · Register: S01,
 | India Data Portal "Vehicle Registrations": Registrations by Fuel Type | S24 | Monthly new registrations by state, RTO and fuel type (VAHAN compilation) | Direct CSV, no login; ODC-BY | Acquired |
 | India Data Portal "Vehicle Registrations": Registrations by Vehicle Class | S27 | Same registrations by RTO and vehicle class (all fuels) | Direct CSV, no login; ODC-BY | Acquired (consistency check only) |
 | Karnataka Transport Department, monthly vehicle statements | S25 | State and Bengaluru totals by vehicle category: stock and new registrations. No fuel, no RTO | PDF, no login | Two months acquired |
-| VAHAN dashboard (vahan.parivahan.gov.in/vahan4dashboard) | S01 (earlier statewide export) | The primary source; can show RTO x class x fuel x month on screen | TCP connection to port 443 fails from the project machine (25 Oct, twice); parivahan.gov.in answers | Not reachable here |
+| VAHAN dashboard (vahan.parivahan.gov.in/vahan4dashboard) | S01 (earlier statewide export) | The primary source; can show RTO x class x fuel x month on screen | TCP connection to port 443 fails from the project machine (25 Oct, twice); parivahan.gov.in answers. On a team member's machine (26 Oct, user-observed): the analytics dashboard loaded once, then failed to load data; the tabular report and the 1-/5-year downloads did not open after CAPTCHA (see `MANUAL_INSPECTION_REVIEW.md`) | Not reachable here; no export obtained |
 | India Data Portal norm and maker tables | – | Same one-attribute layout (norm, maker) | Checked headers only | Not needed |
 | data.gov.in "KAxx ... Vehicle Newly Registered In The Year 2021-2022" | – | One file per RTO, 2021-22, all fuels (about 1.7 KB each) | Download returns HTTP 403 without the portal's download form or API key; GODL-India | Not acquired |
 | Dataful (dataful.in) VAHAN-derived sets | – | Third-party paid copies | Custom licence | Not used |
@@ -67,7 +67,7 @@ Sources tried (25 Oct 2026):
 - **Government of Karnataka contact directory:** rendered client-side, with no transport offices exposed.
 - **Web search:** returned only insurance and aggregator pages, which contradict each other (for example KA-29 and KA-41).
 
-None of these were used. Office names (for example "Hunsur ARTO") are **not** treated as jurisdiction evidence. Jurisdictions follow taluks and can change, for example with the creation of Vijayanagara district in 2021 or new ARTOs such as KA70 and KA71.
+None of these were used. A manual inspection (Stage 2, 26 Oct) found two more leads: the Uttara Kannada district page for RTO Karwar (https://uttarakannada.nic.in/en/rto-karwar/, KA30) and the Tumakuru district RTO page (https://tumkur.nic.in/en/regional-transport-office/). Both are office or context pages, not jurisdiction records, so no row changed. Office names (for example "Hunsur ARTO") are **not** treated as jurisdiction evidence. Jurisdictions follow taluks and can change, for example with the creation of Vijayanagara district in 2021 or new ARTOs such as KA70 and KA71.
 
 ## 6. Method for joining registrations to charging infrastructure
 
@@ -89,5 +89,9 @@ None of these were used. Office names (for example "Hunsur ARTO") are **not** tr
 
 ## 8. Next priority
 
-1. **Manual VAHAN export (section 7)** to get BEV by vehicle class at RTO level.
-2. **Official RTO jurisdiction list:** request it from the Transport Department, for example through its contact or RTI channel, or find the gazette notifications that created each RTO and ARTO. Then fill `verified_official` rows with sources.
+Updated 26 Oct after the manual inspection review; the full plan is in `docs/research/MANUAL_INSPECTION_REVIEW.md` §5.
+
+1. **Freeze the submission geography:** charger supply by district (S18), EV demand at state and RTO level (S26/S28), district demand "not computable" until the crosswalk is verified.
+2. **Acquire the remaining S25 monthly statements** (listed Apr 2024 to Sep 2026) and reconcile S24 monthly all-fuel totals. Do not adjust S24.
+3. **One more manual VAHAN export attempt (section 7)** on a different network or browser, with an access log. It is needed for BEV by vehicle class at RTO level and to explain the 2025 BEV −68.
+4. **Official RTO jurisdiction list:** request it from the Transport Department, for example through its contact or RTI channel, or find the gazette notifications that created each RTO and ARTO. Then fill `verified_official` rows with sources.
