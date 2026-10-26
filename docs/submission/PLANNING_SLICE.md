@@ -24,7 +24,7 @@ The builder reads only processed register datasets and raw files that are alread
 | 2. Charger evidence | BEE rows with valid coordinates (S18, 8,232) and OSM records (S11, 67). Each is classed for e-4W from the connector standard: confirmed, confirmed not (LEV), or unknown (assumption) | No record has an operating status; all are treated as listed, not working |
 | 3. Unit screen | e-4W registrations per BEE site with an e-4W confirmed or unknown row; units need ≥ 500 e-4W registrations (assumption) | 4 of 29 units qualify. **Mysuru 35.4** (814 / 23); Dakshina Kannada 28.3; Bengaluru Urban 28.1; Udupi 26.6. The margin is small, so this ranking is not robust |
 | 4. Candidates | OSM fuel stations (S23) in the unit within 3 km of an OSM city or town node (urban proxy, assumption). Rejected if an e-4W confirmed or unknown charger is within 1 km (S33 cl. 11(1)(a), advisory; used as a distance screen) | 147 fuel stations: 94 outside the urban proxy, 22 inside the 1 km radius, 31 eligible |
-| 5. Selection | Greedy by coverage gap (distance to the nearest e-4W confirmed or unknown charger); at least 1 km apart; one site per settlement; illustrative public budget of INR 50 lakh (planner input) | 7 sites selected, public cost INR 43.97 lakh |
+| 5. Selection | Greedy by coverage gap (distance to the nearest e-4W confirmed or unknown charger); at least 1 km apart; one site per settlement; illustrative public budget of INR 50 lakh (planner input) | 7 sites selected, public cost INR 43.97 lakh. **The budget did not bind:** INR 6.03 lakh remains, but the other 24 eligible stations break the spacing or one-per-settlement rule. The site count is set by those rules, not by the budget |
 | 6. Cost split | 1 × CCS-II 50 kW at the BEE benchmark: upstream 6.04 + EVSE 7.25 = INR 13.29 lakh (S34 §7). Subsidy category from the OSM brand: B for PSU OMC outlets (80% upstream, 70% EVSE), otherwise C (80% upstream) (S34 §6 Table 2) | C: public 4.832, operator 8.458. B: public 9.907, operator 3.383 (INR lakh). Eligible is **modelled, not sanctioned** |
 
 **Selected sites** (`docs/submission/planning_slice/proposal.csv`):
@@ -72,3 +72,29 @@ The site card for KA-SLICE-01 is in `planning_slice/site_card.md`, and the map i
 - The coverage-gap objective rewards distance from listed chargers. It does not measure demand at the site, because registrations have no location inside a unit.
 - Listed chargers with unknown status are treated as present. Chargers that do not work would make the gaps larger than shown.
 - Costs are BEE benchmarks from August 2022, not quotes. Category B is inferred from the OSM brand tag.
+
+## Logical Consistency Check (27 Oct 2026)
+
+**Result: WARNING.** No arithmetic or rule discrepancy was found. One wording issue was fixed (the budget did not bind). The limits below remain. This targeted check of the slice does not validate the project as a whole.
+
+| Check | Result | Evidence |
+| --- | --- | --- |
+| Scope | PASS with WARNING | The checklist, changelog, ADR-001 amendment, README and rules all name Karnataka. The base deep-scan report (Rev3, 22 Oct; the latest version in Downloads) still describes Telangana. It is kept unchanged as history, and ADR-001 overrides it on geography |
+| Registrations | PASS | Unit screen totals equal the 2025 totals in S35: e-4W 21,174; all BEV 203,698 |
+| Charger rows | PASS | 8,232 BEE rows with valid coordinates (8,246 − 8 outside polygons − 6 lat = lon) and 67 OSM records. Both sum exactly across the 29 units |
+| Candidates | PASS | 147 = 94 outside the urban proxy + 22 inside the 1 km radius + 24 eligible but not selected + 7 selected. No duplicate OSM IDs. All coordinates inside the Karnataka bounding box |
+| Cost split | PASS | For each site: public = subsidy + other public, and total = public + operator. Category C public 4.832, B 9.907; total public 43.974 ≤ 50 (INR lakh) |
+| Budget semantics | WARNING (fixed in text) | The budget did not bind. The table above now says so. The result is unchanged |
+| Map vs outputs | PASS | 7 site markers and 7 labels, matching `proposal.csv` |
+| Labels | PASS | Registrations are labelled by registering office, not vehicle population. Chargers are "listed", none operational. Sites are "model-selected candidate". The basis of each parameter is stated |
+| Method consistency | PASS | The code, the parameters file, this report, the site card and the changelog R4-11 status describe the same rules and figures |
+| Reproducibility | PASS | Rebuild from an empty folder is byte-identical (8 files). The tracked copies compare "same". 160 tests pass |
+| Progress integrity | PASS | The checklist marks complete only L-001, L-003, L-005, L-007, L-009a–d and f–h, and L-010. L-002, L-004, L-008, L-009e, L-011 and L-012–L-017 are open or partial |
+
+**Unresolved limitations:**
+- The slice starts from processed data, not raw files (L-002).
+- No capacity range, merged charger table or CEA chart.
+- The rules are not pre-registered and have no sensitivity test.
+- There is no located demand inside a unit.
+- Subsidy category is inferred from the OSM brand tag.
+- No teammate rerun.
