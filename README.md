@@ -1,8 +1,8 @@
 ﻿# EV Infra Map India
 
 A reproducible, evidence-backed EV infrastructure decision-support prototype.
-Pilot geography: Karnataka. Telangana is a future expansion geography
-(see docs/decisions/ADR-001-geography.md).
+Pilot geography: Karnataka (see docs/decisions/ADR-001-geography.md). Other states
+follow through a state-by-state pipeline.
 
 ## Development
 

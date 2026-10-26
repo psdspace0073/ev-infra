@@ -50,3 +50,16 @@ repository on 24 Oct 2026 is for Karnataka (sources S01–S09 in
 2. Obtain DISCOM-to-district lists for BESCOM, MESCOM, HESCOM, GESCOM and CESC.
 3. Find and verify the sources for 6,805 (MHI, March 2026), the Rajya Sabha OMC annexure (Karnataka rows) and the S03 publication date.
 4. Investigate the reported 1,571 PM E-DRIVE approvals and the BESCOM portal as a possible real plan. Do not use either until verified.
+
+## Amendment (2026-10-27)
+
+- Karnataka is the project geography: all collected data, the Round 1 evidence and the
+  finale demo.
+- The official problem statement (`docs/reference/MIH_PS_1_compressed (1).pdf`) names no
+  state. It asks for "selected states, districts, cities, or transport corridors" and a
+  demonstration "for at least one representative geography". Telangana is therefore no
+  longer named as the next expansion state. The roadmap expands state by state, in an
+  order set by data availability.
+- Open item 1 is closed (S29, S30, S31, S35; `docs/research/GAP_CLOSURE_REPORT.md`).
+  Item 2 is not required for Round 1. Items 3 and 4 stay open.
+- The Telangana column in the table above is history.

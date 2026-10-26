@@ -6,8 +6,7 @@ prototype for the EV Infra & Green Mobility AI Challenge.
 
 ## Scope
 - Begin with Karnataka as the pilot / proof-of-work geography
-  (docs/decisions/ADR-001-geography.md). Telangana is a future
-  expansion geography.
+  (docs/decisions/ADR-001-geography.md).
 - Design a repeatable pipeline that can later expand state by state.
 - Support EV demand analysis, charging infrastructure gap analysis,
   and candidate-site prioritisation.

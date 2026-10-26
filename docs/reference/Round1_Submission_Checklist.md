@@ -5,7 +5,7 @@ Source documents: problem statement PDF (MIH_PS_1) and `CHANGELOG_Rev4.md` (late
 Round 1 deadline: **30 October 2026** · Results: 7 November 2026 · Grand Finale: 16–18 December 2026
 Prepared: 23 October 2026
 
-> **Geography change (25 Oct 2026):** the pilot is now **Karnataka**; Telangana is a future expansion geography (repo: `docs/decisions/ADR-001-geography.md`). All active steps now describe Karnataka. Remaining Telangana references are history (the TGREDCO steps F-060 to F-068, earlier figures) or describe Telangana's future-expansion role. Source IDs in this checklist (S01–S22) are not the same as the IDs in `configs/source_register.csv`.
+> **Geography (updated 27 Oct 2026):** **Karnataka** is the project state: all collected data, the pilot, the Round 1 evidence and the finale demo (repo: `docs/decisions/ADR-001-geography.md`). The official problem statement (`docs/reference/MIH_PS_1_compressed (1).pdf`) names no state; it asks for "selected states, districts, cities, or transport corridors" and a demonstration "for at least one representative geography". Telangana is therefore not a project geography and is not named as the next state. Remaining Telangana figures in this checklist are history from the earlier plan only. Source IDs in this checklist (S01–S22) are not the same as the IDs in `configs/source_register.csv`.
 Language: ASD-STE100 Simplified Technical English (approximately 80%)
 
 ---
@@ -53,7 +53,7 @@ The steps below control the full schedule. Do these first.
 7. Q: write the submission.
 8. U: submit (team leader only).
 
-> **STATUS (26 Oct):** in F, registrations by RTO and month (F.1, except the class breakdown F-013), official counts (F.4), OSM (F.5, F.10 extract) and the BEE list (F.7 note) are done. CEA (F.3), DISCOM lists (F-074), WorldPop (F-077) and policy documents (F.11) are not started. H is blocked at H.1: no RTO has a verified district. Update (26 Oct, later): H.1 district grouping done for all 67 RTOs (S30/S31); RTO x class x month battery-EV data acquired (S29/S35); see `docs/research/GAP_CLOSURE_REPORT.md`. Earlier plan: do not wait for H.1. Use charger supply by district (register S18), EV demand at state and RTO level (S26/S28), and state that district demand is not computable. Verified progress, gaps, blockers and the 26–30 Oct priority order: `docs/research/MANUAL_INSPECTION_REVIEW.md`. Figures for the submission: use only the audited claim register in `docs/submission/EVIDENCE_PACKAGE.md`.
+> **STATUS (26 Oct):** in F, registrations by RTO and month (F.1, except the class breakdown F-013), official counts (F.4), OSM (F.5, F.10 extract) and the BEE list (F.7 note) are done. CEA (F.3), DISCOM lists (F-074), WorldPop (F-077) and policy documents (F.11) are not started. H is blocked at H.1: no RTO has a verified district. Update (26 Oct, later): H.1 district grouping done for all 67 RTOs (S30/S31); RTO x class x month battery-EV data acquired (S29/S35); see `docs/research/GAP_CLOSURE_REPORT.md`. Earlier plan: do not wait for H.1. Use charger supply by district (register S18), EV demand at state and RTO level (S26/S28), and state that district demand is not computable. Verified progress, gaps, blockers and the 26–30 Oct priority order: `docs/research/MANUAL_INSPECTION_REVIEW.md`. Figures for the submission: use only the audited claim register in `docs/submission/EVIDENCE_PACKAGE.md`. Update (27 Oct): the Part L planning slice runs end to end (`docs/submission/PLANNING_SLICE.md`); Part I definitions are still not frozen.
 
 > **CAUTION:** The changelog has a review freeze. Do not start a new review round. Accept a new item only if it unblocks the build or fixes a factual error.
 
@@ -473,21 +473,19 @@ The steps below control the full schedule. Do these first.
 
 ### F.8 Real plans (S11): Karnataka
 
-> **NOTE:** No verified Karnataka public site-level plan is established yet. Real-plan agreement is "method only / not evaluated" until one is found and verified. F-060 to F-068 below were written for TGREDCO (Telangana, now a future geography) and are kept for reference.
+> **NOTE:** No verified Karnataka public site-level plan is established yet. Real-plan agreement is "method only / not evaluated" until one is found and verified. Updated 27 Oct: the TGREDCO (Telangana) download steps are removed because Telangana is not a project geography. F-062 to F-068 are rewritten to apply to a Karnataka plan, if F-060a or F-060b finds one.
 
 - [ ] F-060a Investigate the reported 1,571 PM E-DRIVE approvals for Karnataka. Record the source, date, unit (chargers, stations or sites) and whether a site list exists.
 - [ ] F-060b Investigate the BESCOM charging portal. Record the URL, terms of use and whether it gives a site-level list or plan.
 - [ ] F-060c If neither gives a verified site-level plan, record "no verified Karnataka plan" in the decision log. Do not invent one.
 
-- [ ] F-060 Download the TGREDCO tender documents (369 stations: 200 Hyderabad in 6 clusters, 169 across 5 districts).
-- [ ] F-061 Download any document for the PM E-DRIVE Phase-I sanction (116 locations).
-- [ ] F-062 Extract the site list: name, address, cluster, district, charger type, count.
-- [ ] F-063 Record the uptime requirement in the tender (the plan says 95%).
+- [ ] F-062 If a verified Karnataka plan exists, extract the site list: name, address, district, charger type, count.
+- [ ] F-063 Record any uptime requirement stated in the plan documents.
 - [ ] F-064 Record each date in the documents (issue, bid, award). These dates feed the delivery tracker.
 - [ ] F-065 Geocode the sites. Record the geocoding method.
 - [ ] F-066 Give each geocoded site a geocode confidence: exact, street, locality, district.
-- [ ] F-067 Do not call the 116 locations "116 chargers" or "116 sites".
-- [ ] F-068 Keep the sanction and the tender as two separate datasets.
+- [ ] F-067 Keep the unit of the plan as published (chargers, stations or sites). Do not convert one into another.
+- [ ] F-068 Keep a sanction list and a tender list as two separate datasets.
 
 ### F.9 Boundaries and crosswalks (S12, S13, S14, S15)
 
@@ -737,25 +735,25 @@ The steps below control the full schedule. Do these first.
 
 ### L.1 Contents
 
-- [ ] L-001 Make one script or notebook that goes from the raw files to one proposed site.
-- [ ] L-002 Make sure that the script reads only from `/data/raw` and `/config/settings.yaml`.
-- [ ] L-003 Print the source names, retrieval dates and row counts for each input.
-- [ ] L-004 Show one deduplication example: one charger in more than one source, its lineage groups and its merged record.
-- [ ] L-005 Show one RTO result joined to its district or DISCOM and its nearby charger evidence.
+- [x] L-001 Make one script or notebook that goes from the raw files to one proposed site. — CC 27 Oct: `src/evinfra/scoring/build_karnataka_planning_slice.py`; starts from processed register datasets (each with its own builder), see `docs/submission/PLANNING_SLICE.md`
+- [ ] L-002 Make sure that the script reads only from `/data/raw` and `/config/settings.yaml`. — CC 27 Oct: NOT MET; reads `data/processed` and `configs/planning_slice_parameters.json`; no `settings.yaml` (Part I open)
+- [x] L-003 Print the source names, retrieval dates and row counts for each input. — CC 27 Oct: `inputs.csv` (register ID, rows, date, SHA-256)
+- [ ] L-004 Show one deduplication example: one charger in more than one source, its lineage groups and its merged record. — CC 27 Oct: PARTIAL; BEE/OSM proximity example (within 100 m) in `site_card.md`; no merged record (H-014, H-018 open)
+- [x] L-005 Show one RTO result joined to its district or DISCOM and its nearby charger evidence. — CC 27 Oct: KA9, KA45, KA55 to Mysuru with charger evidence (district only; DISCOM not done)
 - [ ] L-006 Show the reconciled Karnataka charger count vs 6,097 (MoP, S03), 6,805 (MHI, March 2026, not verified yet) and the OMC annexure values (not verified yet), with the definition and date of each count.
-- [ ] L-007 Show EV registrations per RTO by class (observed totals).
-- [ ] L-008 Make one CEA comparison chart. Label it "consistency check".
-- [ ] L-009 Show one proposed site with these fields:
-  - [ ] L-009a Site ID and coordinates.
-  - [ ] L-009b Tier label (model-selected candidate, feasibility-checked or field-verified).
-  - [ ] L-009c Vehicle type and charger configuration.
-  - [ ] L-009d Estimated demand nearby.
-  - [ ] L-009e Estimated compatible capacity nearby (low, central, high).
-  - [ ] L-009f Cost split (total, PM E-DRIVE subsidy modelled, other public, public cost, operator share).
-  - [ ] L-009g Reason for selection.
-  - [ ] L-009h Evidence sources and dates.
-- [ ] L-010 Write the list of missing fields and the fallback for each.
-- [ ] L-011 Make one map screenshot (Karnataka, merged chargers, one proposed site).
+- [x] L-007 Show EV registrations per RTO by class (observed totals). — CC 27 Oct: S35; slice unit in `rto_served_bev.csv`
+- [ ] L-008 Make one CEA comparison chart. Label it "consistency check". — CC 27 Oct: NOT DONE; CEA not acquired
+- [ ] L-009 Show one proposed site with these fields: — CC 27 Oct: KA-SLICE-01 in `docs/submission/planning_slice/site_card.md`; all fields except L-009e
+  - [x] L-009a Site ID and coordinates.
+  - [x] L-009b Tier label (model-selected candidate, feasibility-checked or field-verified).
+  - [x] L-009c Vehicle type and charger configuration.
+  - [x] L-009d Estimated demand nearby. — observed unit registrations by registering office; no located demand
+  - [ ] L-009e Estimated compatible capacity nearby (low, central, high). — NOT DONE: d, H, confidence scores not frozen; listed chargers within 5 km shown instead
+  - [x] L-009f Cost split (total, PM E-DRIVE subsidy modelled, other public, public cost, operator share).
+  - [x] L-009g Reason for selection.
+  - [x] L-009h Evidence sources and dates.
+- [x] L-010 Write the list of missing fields and the fallback for each. — CC 27 Oct: `site_card.md`
+- [ ] L-011 Make one map screenshot (Karnataka, merged chargers, one proposed site). — CC 27 Oct: PARTIAL; `planning_slice/map.svg` (Mysuru unit, proposed sites); chargers are listed, not merged
 
 ### L.2 Reproducibility test
 
@@ -767,6 +765,8 @@ The steps below control the full schedule. Do these first.
 - [ ] L-017 Make a Git tag: `slice-v1-2026-10-26`.
 
 > **NOTE:** If the slice is not complete by the end of 26 October, go to W-010.
+
+> **STATUS (27 Oct):** the slice runs end to end on repo data (7 model-selected candidates, Mysuru unit, e-4W, illustrative INR 50 lakh public budget). A rebuild from an empty output folder was byte-identical (8 files). L-012 to L-017 (teammate rerun, tag) are not done. Details: `docs/submission/PLANNING_SLICE.md`.
 
 ---
 
@@ -867,7 +867,7 @@ The steps below control the full schedule. Do these first.
 - [ ] O-017 Add the demo video date (deliverable for the finale).
 - [ ] O-018 Write the finale demo sequence in short form.
 - [ ] O-019 Write how the finale presentation will show the evolution from the Round 1 roadmap.
-- [ ] O-020 Write the scalability path: Karnataka, then Telangana, then a state-by-state pipeline, then national.
+- [ ] O-020 Write the scalability path: Karnataka, then further states in a state-by-state pipeline (order set by data availability), then national.
 
 ### O.4 Gantt chart
 
@@ -948,7 +948,7 @@ The steps below control the full schedule. Do these first.
 - [ ] Q-023 State that VAHAN gives registrations by RTO, not locations.
 - [ ] Q-024 State who the user is: the state nodal agency.
 - [ ] Q-025 State the decision the user makes: which sites, which chargers, what subsidy, and why.
-- [ ] Q-026 State the study boundary: Karnataka for Round 1 and the finale; Telangana as the next expansion state; national as a state-by-state pipeline.
+- [ ] Q-026 State the study boundary: Karnataka for Round 1 and the finale; other states and national coverage through a state-by-state pipeline.
 - [ ] Q-027 State the reason for Karnataka: the core data is downloaded and joined (31 LGD districts), and it has the highest public charger count (6,097) among the 36 states and UTs listed in the inspected MoP annexure (repo file S03, national total 29,277). Do not claim a real-plan comparison: no verified Karnataka site-level plan exists yet (method only / not evaluated).
 - [ ] Q-028 Map the five PDF objective points to the solution in one small table (from D-005).
 
@@ -1013,7 +1013,7 @@ The steps below control the full schedule. Do these first.
 - [ ] Q-073 Add the kill criteria.
 - [ ] Q-074 Add the stretch table with "if time allows".
 - [ ] Q-075 Add the roadmap-only list (after the finale).
-- [ ] Q-076 Add the scalability path (Karnataka, then Telangana, state pipeline, national).
+- [ ] Q-076 Add the scalability path (Karnataka, then a state-by-state pipeline, then national).
 - [ ] Q-077 Add the finale demo plan in short form.
 
 ### Q.9 Section 7: Deliverable map (R4-20, about half a page)

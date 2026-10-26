@@ -5,7 +5,7 @@ Planned 22–30 Oct 2026 · Round 1 deadline: **30 Oct 2026** (team leader submi
 
 Base document: `EV_Infra_Green_Mobility_AI_Challenge_Deep-Scan_Report_Rev3.md`
 
-> **Geography change (25 Oct 2026):** the pilot geography is now **Karnataka**; Telangana is a future expansion geography. See [`docs/decisions/ADR-001-geography.md`](../decisions/ADR-001-geography.md). R4-01, R4-02, R4-03, R4-05, R4-06, R4-07, R4-09, R4-11, R4-19 and R4-20 are updated below. Remaining Telangana references are history (review summaries, earlier figures) or describe Telangana's future-expansion role. Methods, scoring, optimiser and validation design do not change.
+> **Geography change (25 Oct 2026, amended 27 Oct):** the project geography is **Karnataka**. See [`docs/decisions/ADR-001-geography.md`](../decisions/ADR-001-geography.md). The official problem statement names no state, so Telangana is not a project geography and is not named as the next state (amendment of 27 Oct). R4-01, R4-02, R4-03, R4-05, R4-06, R4-07, R4-09, R4-11, R4-19 and R4-20 are updated below. Remaining Telangana references are history (review summaries, earlier figures). Methods, scoring, optimiser and validation design do not change.
 
 **Priority:** P0 = must be done before submission · P1 = should be done · P2 = nice to have
 **Owner:** still blank. **Blocker:** assign owners for data, modelling, validation, UI/export and submission before any other work on 24 Oct.
@@ -134,6 +134,8 @@ Our own "demand served" number is reported separately, labelled as model-based. 
 
 **Done when:** a teammate who did not build it can rerun it from the raw files and get the same output.
 
+**Status (27 Oct):** the slice runs from the register datasets to seven model-selected candidate sites (Mysuru unit, e-4W, illustrative budget), and a rebuild is byte-identical: `docs/submission/PLANNING_SLICE.md`. Not yet done: the teammate rerun, the CEA chart, the capacity range and a merged charger table.
+
 ### R4-15 · Estimated compatible charging capacity per vehicle type, as a range (P1)
 **Problem:** M2 discounts each charger by its public and working scores, but treats capacity as one pool. A car fast charger doesn't serve e-rickshaws, and a single number hides that status is often unknown. A count of listed chargers is also not the same as capacity.
 **Name:** the output is called **estimated compatible charging capacity** (kWh/day), never "observed" or "service" capacity, because only connector types, counts and rated power are known.
@@ -239,7 +241,7 @@ No site is ever described with a stronger claim than its label. For Round 1 and 
 | Track 1 deliverable | Round 1 evidence | Finale commitment |
 | --- | --- | --- |
 | Web platform / unified view | Architecture and the Karnataka slice (R4-11) | Working Karnataka planning app |
-| Interactive national GIS map | National data architecture and stated limits | Karnataka live; Telangana next; national as a state-by-state pipeline, explained |
+| Interactive national GIS map | National data architecture and stated limits | Karnataka live; other states and national coverage as a state-by-state pipeline, explained |
 | Methodology document | This submission | Completed methodology with results |
 | Estimation and recommendation module | One reproducible site-selection example | Budget-constrained allocation and proposal export |
 | Decision-support dashboard | Mock-up or screenshot from the slice | Dashboard passing the acceptance test (R4-18) |

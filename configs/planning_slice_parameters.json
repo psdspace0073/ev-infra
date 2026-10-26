@@ -1,0 +1,85 @@
+{
+  "_about": "Parameters for the Karnataka planning slice (R4-11, checklist Part L). Written on 27 Oct 2026 before any e-4W screening or site result was computed. The all-class district-unit table (claim E21) was already published, so these rules are not pre-registered in the R4-19 sense; the R4-19 freeze (checklist Part I) is still open. Each value states its basis: 'clause' (cited register clause), 'assumption' (team choice, sensitivity not tested) or 'planner_input' (illustrative input, not a proposed or sanctioned amount).",
+  "reference_year": {
+    "value": 2025,
+    "basis": "assumption",
+    "note": "Latest complete calendar year in S35; same year as claims E20/E21."
+  },
+  "served_vehicle_type": {
+    "value": "e-4W",
+    "vahan_classes": ["MOTOR CAR", "MOTOR CAB", "MAXI CAB"],
+    "basis": "assumption",
+    "note": "The only charger configuration with a recorded BEE benchmark cost in S34 Tables 3-4 is CCS-II, a car connector. e-2W and e-3W selection is method only."
+  },
+  "unit_screen": {
+    "min_served_bev_registrations": 500,
+    "metric": "served-type BEV registrations in the reference year per BEE candidate site with at least one e-4W confirmed or unknown row (point in the unit)",
+    "basis": "assumption",
+    "note": "Screening indicator by registering office, not a gap estimate. The minimum avoids ranking units on very small counts."
+  },
+  "bee_e4w_compatibility": {
+    "confirmed": ["CCS", "CCS-II", "Combo (CCS-II+CHAdeMO)", "CHAdeMo", "Type-II AC", "Bharat DC-001"],
+    "confirmed_not_prefix": "LEV",
+    "otherwise": "unknown",
+    "basis": "assumption",
+    "note": "Classified by the connector standard named in S18 charger_type. OSM records use S11 compat_motorcar."
+  },
+  "duplication_radius_km": {
+    "value": 1.0,
+    "basis": "clause",
+    "register_id": "S33",
+    "clause": "Clause 11(1)(a), page 7 of 36: at least one charging station within a 1 km x 1 km grid in notified urban areas (advisory, 'may be adopted')",
+    "note": "Used as a distance screen: a candidate is rejected if any e-4W confirmed or unknown charger (BEE or OSM) lies within this radius. This is not the grid-cell compliance metric (checklist I-006 open)."
+  },
+  "urban_proxy": {
+    "place_values": ["city", "town"],
+    "radius_km": 3.0,
+    "basis": "assumption",
+    "note": "S33 11(1)(a) applies to urban areas notified by the state; no notified list was acquired. Proxy: within this distance of an OSM place=city or place=town node (S23)."
+  },
+  "selection": {
+    "objective": "largest distance to the nearest e-4W confirmed or unknown charger (coverage gap), ties broken by OSM id",
+    "min_spacing_between_selected_km": 1.0,
+    "max_sites_per_settlement": 1,
+    "basis": "assumption",
+    "note": "Greedy selection in objective order until the public-cost budget is used. No located demand exists inside a unit (RTO data gives the registering office), so the spatial rule uses coverage only."
+  },
+  "configuration": {
+    "connector": "CCS-II",
+    "rated_kw": 50,
+    "count": 1,
+    "upstream_benchmark_inr_lakh": 6.04,
+    "evse_benchmark_inr_lakh": 7.25,
+    "basis": "clause",
+    "register_id": "S34",
+    "clause": "Section 7, Tables 3-4 (BEE benchmark costs, Aug 2022): upstream up to 50 kW INR 6.04 lakh; EVSE CCS-II 50 kW INR 7.25 lakh",
+    "note": "Benchmark costs, not quotes; no cost range is estimated. Subsidy is a share of the benchmark or actual cost, whichever is lower (S34 section 6)."
+  },
+  "subsidy_categories": {
+    "B": {"upstream_share": 0.8, "evse_share": 0.7, "applies_to": "PSU OMC outlets (and other government/PSU-controlled locations)"},
+    "C": {"upstream_share": 0.8, "evse_share": 0.0, "applies_to": "all other city and highway locations"},
+    "basis": "clause",
+    "register_id": "S34",
+    "clause": "Section 6, Table 2"
+  },
+  "psu_omc_brands": {
+    "value": ["bharat petroleum", "bharath petroleum", "bpcl", "hindustan petroleum", "hp", "hpcl", "indian oil", "indianoil", "iocl"],
+    "basis": "assumption",
+    "note": "Matched against the OSM brand tag, else operator (lower case). Category B is modelled from the brand only; outlet ownership and nodal-agency eligibility (S34 section 2) are not verified. 'BP' is excluded as ambiguous (Jio-bp is not a PSU)."
+  },
+  "other_public_funding_inr_lakh": {
+    "value": 0,
+    "basis": "planner_input",
+    "note": "R4-16 default."
+  },
+  "public_budget_inr_lakh": {
+    "value": 50,
+    "basis": "planner_input",
+    "note": "Illustrative budget for one example run. Not a proposed, requested or sanctioned amount."
+  },
+  "nearby_radius_km": {
+    "value": 5.0,
+    "basis": "assumption",
+    "note": "Radius for the listed-charger context on the site card. Listed rated power is not capacity."
+  }
+}

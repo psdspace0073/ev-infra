@@ -1,0 +1,145 @@
+{
+  "parameters_sha256": "8cdcd3d82094e1170961087110084258e71776fdc9caee0ad5a93afcdb32144d",
+  "reference_year": 2025,
+  "served_vehicle_type": "e-4W",
+  "units_screened": 29,
+  "units_screen_eligible": 4,
+  "slice_unit": "Mysuru",
+  "slice_unit_rtos": [
+    "KA9",
+    "KA45",
+    "KA55"
+  ],
+  "candidates_in_unit": 147,
+  "candidates_by_status": {
+    "eligible: not selected (settlement already has a selected site)": 16,
+    "eligible: not selected (spacing to a selected site)": 8,
+    "rejected: e-4W confirmed/unknown charger within duplication radius": 22,
+    "rejected: outside urban proxy": 94,
+    "selected": 7
+  },
+  "selected_sites": 7,
+  "public_budget_inr_lakh": 50,
+  "public_cost_selected_inr_lakh": 43.974,
+  "located_charger_records": {
+    "bee_rows": 8232,
+    "osm_records": 67
+  },
+  "stage_status": {
+    "1_charger_evidence": "partial: BEE rows and OSM records with e-4W state and proximity matches; no merged table or confidence scores",
+    "2_demand_by_class_rto": "demonstrated: observed BEV registrations by RTO, class and month (S35), registering office",
+    "3_cea_calibration": "method only: CEA data not acquired",
+    "4_site_selection": "one example run demonstrated (one unit, e-4W, greedy, illustrative budget); equity mode and optimiser method only",
+    "5_proposal_export": "one site card demonstrated; capacity range not computed",
+    "6_validation": "method only"
+  },
+  "inputs": [
+    {
+      "register_id": "S35",
+      "path": "data/processed/S35_ka_bev_rto_class_month.csv",
+      "rows_or_features": "14445",
+      "register_retrieved_or_built": "2026-10-26",
+      "sha256": "3b30331104d21fc69be98795edd7659d5efe7df6f640395a200e9ba12fb3d77e"
+    },
+    {
+      "register_id": "S30/S31",
+      "path": "configs/ka_rto_district_crosswalk.csv",
+      "rows_or_features": "67",
+      "register_retrieved_or_built": "",
+      "sha256": "d3e7c2b25bb88ea17c229f3c80e44c5bb3b35e380bb23ce7f7820bf449f44837"
+    },
+    {
+      "register_id": "S18",
+      "path": "data/processed/S18_karnataka_bee_pcs_rows.csv",
+      "rows_or_features": "8246",
+      "register_retrieved_or_built": "2026-10-25",
+      "sha256": "1aa68d4b9b245f5ac719b518e2fcc4beadaa0dfa8120c1faaac9962759ef0cb7"
+    },
+    {
+      "register_id": "S19",
+      "path": "data/processed/S19_karnataka_bee_pcs_sites.csv",
+      "rows_or_features": "6056",
+      "register_retrieved_or_built": "2026-10-25",
+      "sha256": "ae5cd1e594eba7eadb7cfa4c1005c18c86ec2a8c988fad7889da22f64c26720e"
+    },
+    {
+      "register_id": "S11",
+      "path": "data/processed/S11_karnataka_charger_inventory.csv",
+      "rows_or_features": "67",
+      "register_retrieved_or_built": "2026-10-25",
+      "sha256": "7638a54e33e79da6ec05d558d0e58db1e5c96f433a1fe3db5826ca110fb13130"
+    },
+    {
+      "register_id": "S12",
+      "path": "data/processed/S12_karnataka_district_charger_join.csv",
+      "rows_or_features": "31",
+      "register_retrieved_or_built": "2026-10-25",
+      "sha256": "2bbd5c5795cf4c7876b0acd87bd8888fb3919793dfde292b57357c36574d5296"
+    },
+    {
+      "register_id": "S23",
+      "path": "data/processed/S23_osm_ka_fuel.geojson",
+      "rows_or_features": "2273",
+      "register_retrieved_or_built": "2026-10-25",
+      "sha256": "8f3c14bebc08029bb082c255f81ed2db9d5fa86d176bfd7064d84148cc927de9"
+    },
+    {
+      "register_id": "S23",
+      "path": "data/processed/S23_osm_ka_settlements.geojson",
+      "rows_or_features": "27881",
+      "register_retrieved_or_built": "2026-10-25",
+      "sha256": "3120a019741d7ca9547e1e53df6c5b785d79c861b340e3ef32e07dc68401194b"
+    },
+    {
+      "register_id": "S06",
+      "path": "data/raw/S06_idp_district_lgd_codes.csv",
+      "rows_or_features": "765",
+      "register_retrieved_or_built": "2026-10-24T13:25:04Z",
+      "sha256": "61687ca0a02fda880e98bd26649360e43bb3c008a58be333c727dc7dd14032ad"
+    },
+    {
+      "register_id": "S20",
+      "path": "data/raw/district_boundaries/datameet maps master Districts-Census_2011.zip",
+      "rows_or_features": "",
+      "register_retrieved_or_built": "Not recorded (local file time 2026-10-24 18:29 +05:30)",
+      "sha256": "a5c3c7d308ae8d60232d3aa0904c3a4d5cec0774a71ba5f2158997af746e3d25"
+    },
+    {
+      "register_id": "S33",
+      "path": "data/raw/S33_mop_evci_guidelines_2024-09-17.pdf",
+      "rows_or_features": "",
+      "register_retrieved_or_built": "2026-10-26T15:03:51Z",
+      "sha256": "12a17ee94f0b5472b1167d04d2799116f2b18fe95602504523ec2bb6245691b6"
+    },
+    {
+      "register_id": "S34",
+      "path": "data/raw/S34_mhi_pm_edrive_ev_pcs_operational_guidelines_2025-09-26.pdf",
+      "rows_or_features": "",
+      "register_retrieved_or_built": "2026-10-26T15:03:51Z; 2026-10-26T15:03:52Z",
+      "sha256": "1834446668dd31000ce4f53ee6f5b97197bf434efe19aa2c472475d5546c5719"
+    },
+    {
+      "register_id": "register",
+      "path": "configs/source_register.csv",
+      "rows_or_features": "35",
+      "register_retrieved_or_built": "",
+      "sha256": "85afc52ad4960402d6525ba1f4a8ab764c9acaccf7fcb9a007c7854fba100fe6"
+    },
+    {
+      "register_id": "parameters",
+      "path": "configs/planning_slice_parameters.json",
+      "rows_or_features": "",
+      "register_retrieved_or_built": "",
+      "sha256": "8cdcd3d82094e1170961087110084258e71776fdc9caee0ad5a93afcdb32144d"
+    }
+  ],
+  "outputs_sha256": {
+    "inputs.csv": "3204b51be19a954216bbbd5b52698631f177b8b8b886a2ff171de201357925ae",
+    "unit_screen.csv": "3622558897ebafc075f46b5f4b45b8371ddf9599f8b81c0d1b97410d742fac93",
+    "rto_served_bev.csv": "88c4bfff5ec29e7868cfec3119ed54e2a7f1b7941ce18dfe2a7487f4efd070d7",
+    "candidates.csv": "905612080ca98316929f51d7625e76c4ea64b3ac3db903d8ba86ff58c0ad921d",
+    "proposal.csv": "834dda51c786624839a184fd48025f4e0566c9481437bbd9f73894b0bcf1639d",
+    "site_card.md": "b1def76968068ae091bb932c8721eeffb832ced62418786bf29c82385adb7056",
+    "map.svg": "97c5ba0a5e017fd0e4c28843759dbde87efaeb8209a720842c73f53c093bcb35"
+  }
+}
