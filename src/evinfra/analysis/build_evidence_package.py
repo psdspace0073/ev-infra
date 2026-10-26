@@ -475,8 +475,8 @@ def build_claims(data: dict, stage3: dict | None) -> tuple[list[dict[str, str]],
         "rows_with_valid_coordinates, candidate_physical_sites",
         "verified_reproducible",
         f"Installed, not operational: {s18['rows_with_known_operating_status']} rows have an "
-        "operating status. Licence not stated. Extracted from a PDF; no official spreadsheet "
-        "to compare with.",
+        "operating status. Reuse allowed with attribution under BEE's Copyright Policy "
+        "(register S15). Extracted from a PDF; no official spreadsheet to compare with.",
     )
     if stage3 is not None:
         add(
