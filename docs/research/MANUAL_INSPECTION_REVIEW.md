@@ -49,7 +49,7 @@ Verification commands (scripts in a scratch directory, not committed): recompute
 | G4 | Only 2 of the S25 monthly statements acquired (listed Apr 2024–Sep 2026) | Monthly all-fuel totals not reconciled for 28 other months, including the October peaks |
 | G5 | 33 RTO-months without rows (KA45, KA46, KA57) | Unknown if zero or unreported |
 | G6 | BEE list: licence not stated; no operational status (0 rows) | Charger counts are installed, not operational |
-| G7 | Stage 5 evidence package uses the Stage 3 count and its own source IDs | Not usable for submission without rebuild |
+| G7 | Stage 5 evidence package uses the Stage 3 count and its own source IDs | **Closed 26 Oct:** rebuilt as `docs/submission/EVIDENCE_PACKAGE.md` with a generated, audited claim register |
 | G8 | Checklist Part F items not started: CEA reports (F.3), DISCOM lists (F-074), WorldPop (F-077), policy documents (F.11), OMC counts (F-036) | No energy calibration, no DISCOM join, no population grid. Not covered by the five stage reports |
 
 ## 4. Blockers
@@ -61,11 +61,11 @@ Verification commands (scripts in a scratch directory, not committed): recompute
 ## 5. Completion plan (26–30 October, in priority order)
 
 1. **Freeze the submission geography (26–27 Oct).** Use what is valid now: charger supply by district (S18 points in S20/S06 polygons), EV demand at state and RTO level (S26/S28), and an explicit "not computable" for district demand. Record this in the decision log. This removes G1 from the critical path.
-2. **Rebuild the evidence package from register IDs (27–28 Oct).** Start from Stage 5's structure. Replace the 6,113 BEE count with S18/S19 figures; restate DQ-01 as BEV −68 vs S01; add the S25 comparator for DQ-02; map S-01…S-10 to register IDs.
+2. **Rebuild the evidence package from register IDs.** **Done 26 Oct:** `docs/submission/EVIDENCE_PACKAGE.md`, `docs/submission/claim_register.csv`, generator `src/evinfra/analysis/build_evidence_package.py`.
 3. **Acquire the remaining S25 monthly statements (27 Oct, low effort).** Save unchanged with manifests; add them to the monthly reconciliation (G4). Do not adjust S24.
 4. **One more VAHAN attempt (by 28 Oct)** on a different network or browser, with the steps in `KA_EV_REGISTRATIONS_REPORT.md` §7. Record URL, time, browser and result in an access log. If it fails, record G2 and G3 as limitations (checklist Part W).
 5. **Continue RTO jurisdiction search** (parallel, not on the critical path): gazette notifications for RTO/ARTO creation, district administration pages that state jurisdiction (start with the Stage 2 leads), or an official request. Fill a crosswalk row only with LGD code, jurisdiction basis, URL and retrieval date.
-6. **Decide on G8 by 27 Oct:** for each open Part F item, either acquire it or record it as out of Round 1 scope in the decision log (checklist Part J).
+6. **Decide on G8 by 27 Oct:** for each open Part F item, either acquire it or record it as out of Round 1 scope in the decision log (checklist Part J). Assessment: `docs/submission/EVIDENCE_PACKAGE.md` §6. Only the MoP 2024 and PM E-DRIVE guidelines are essential, and only if the text cites spacing or subsidy rules.
 7. **Keep G5 and G6 as stated limitations.** Do not impute zeros. Do not call installed chargers operational.
 
 ## 6. Files in the folder (not tracked)

@@ -53,7 +53,7 @@ The steps below control the full schedule. Do these first.
 7. Q: write the submission.
 8. U: submit (team leader only).
 
-> **STATUS (26 Oct):** in F, registrations by RTO and month (F.1, except the class breakdown F-013), official counts (F.4), OSM (F.5, F.10 extract) and the BEE list (F.7 note) are done. CEA (F.3), DISCOM lists (F-074), WorldPop (F-077) and policy documents (F.11) are not started. H is blocked at H.1: no RTO has a verified district. Plan: do not wait for H.1. Use charger supply by district (register S18), EV demand at state and RTO level (S26/S28), and state that district demand is not computable. Verified progress, gaps, blockers and the 26–30 Oct priority order: `docs/research/MANUAL_INSPECTION_REVIEW.md`.
+> **STATUS (26 Oct):** in F, registrations by RTO and month (F.1, except the class breakdown F-013), official counts (F.4), OSM (F.5, F.10 extract) and the BEE list (F.7 note) are done. CEA (F.3), DISCOM lists (F-074), WorldPop (F-077) and policy documents (F.11) are not started. H is blocked at H.1: no RTO has a verified district. Plan: do not wait for H.1. Use charger supply by district (register S18), EV demand at state and RTO level (S26/S28), and state that district demand is not computable. Verified progress, gaps, blockers and the 26–30 Oct priority order: `docs/research/MANUAL_INSPECTION_REVIEW.md`. Figures for the submission: use only the audited claim register in `docs/submission/EVIDENCE_PACKAGE.md`.
 
 > **CAUTION:** The changelog has a review freeze. Do not start a new review round. Accept a new item only if it unblocks the build or fixes a factual error.
 
@@ -250,6 +250,8 @@ The steps below control the full schedule. Do these first.
 | Demographic and economic activity | WorldPop; Census 2011 | Verified (WorldPop) |
 | Electricity infrastructure | CEA EVCS report; DISCOM areas; substation data | Verified (CEA); Planned (substations) |
 | Supporting contextual information | OSM points of interest for candidate sites | Verified or Planned |
+
+> **NOTE (26 Oct):** these targets are not current status. WorldPop and CEA are not acquired. If they are not acquired by 29 Oct, write "Verified (Census 2011, S04/S09); Planned (WorldPop)" and "Verified (OSM power lines and points, S23); Planned (CEA, DISCOM areas)". Assessment: `docs/submission/EVIDENCE_PACKAGE.md` §6.
 
 - [ ] D-009 Note: the PDF allows public, open-source, sample or synthetic data. The PDF says: document all sources and assumptions.
 
