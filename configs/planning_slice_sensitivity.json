@@ -1,0 +1,13 @@
+{
+  "_about": "Frozen on 27 Oct 2026, before any alternative was run. Each variant changes ONE baseline rule in configs/planning_slice_parameters.json (the baseline stays unchanged). Every variant is reported; none is preferred. The unit screen is not varied, so all variants select within Mysuru.",
+  "variants": [
+    {"id": "V0_baseline", "why": "Committed baseline (parameters file unchanged)", "overrides": {}},
+    {"id": "V1_dup_0.5km", "why": "Charger spacing: half the S33 1 km grid side (a looser duplication screen)", "overrides": {"duplication_radius_km": {"value": 0.5}}},
+    {"id": "V2_dup_2km", "why": "Charger spacing: twice the S33 1 km grid side (a stricter duplication screen)", "overrides": {"duplication_radius_km": {"value": 2.0}}},
+    {"id": "V3_urban_2km", "why": "Town eligibility: tighter urban proxy (2 km from a city or town node)", "overrides": {"urban_proxy": {"radius_km": 2.0}}},
+    {"id": "V4_urban_5km", "why": "Town eligibility: looser urban proxy (5 km)", "overrides": {"urban_proxy": {"radius_km": 5.0}}},
+    {"id": "V5_city_only", "why": "Town eligibility: place=city nodes only (larger urban areas)", "overrides": {"urban_proxy": {"place_values": ["city"]}}},
+    {"id": "V6_budget_25", "why": "Budget handling: a ceiling below the baseline spend (INR 25 lakh), so the budget binds", "overrides": {"public_budget_inr_lakh": {"value": 25}}},
+    {"id": "V7_no_settlement_cap", "why": "Budget handling: drop the one-site-per-settlement cap, so the INR 50 lakh ceiling can bind", "overrides": {"selection": {"max_sites_per_settlement": 1000}}}
+  ]
+}
