@@ -98,3 +98,33 @@ The site card for KA-SLICE-01 is in `planning_slice/site_card.md`, and the map i
 - There is no located demand inside a unit.
 - Subsidy category is inferred from the OSM brand tag.
 - No teammate rerun.
+
+## Selection-method sensitivity (27 Oct 2026)
+
+The alternatives were frozen in `configs/planning_slice_sensitivity.json` and committed (`e85461c`) before any was run. Each variant changes one baseline rule; the baseline parameters and outputs are unchanged. Rerun with `python src/evinfra/scoring/run_planning_slice_sensitivity.py`, which writes `planning_slice/sensitivity.csv`. All variants are reported. The unit screen is not varied, so every variant selects within Mysuru.
+
+| Variant | Change | Eligible | Selected | Public cost (INR lakh) | Budget binds | Baseline sites kept |
+| --- | --- | --- | --- | --- | --- | --- |
+| V0 baseline | none | 31 | 7 | 43.974 | no | 7 of 7 |
+| V1 | duplication radius 0.5 km | 41 | 7 | 43.974 | no | 7 of 7 |
+| V2 | duplication radius 2 km | 20 | 6 | 39.142 | no | 6 of 7 |
+| V3 | urban proxy 2 km | 18 | 6 | 39.142 | no | 5 of 7 |
+| V4 | urban proxy 5 km | 50 | 8 | 48.806 | no | 6 of 7 |
+| V5 | city nodes only | 10 | 1 | 4.832 | no | 1 of 7 |
+| V6 | budget INR 25 lakh | 31 | 4 | 24.403 | yes | 4 of 7 |
+| V7 | no one-per-settlement cap | 31 | 7 | 49.049 | yes | 5 of 7 |
+
+**Reading:**
+- **Stable:** the top four sites (Hunsur, Bannur, Hullahalli, Periyapatna) are selected in every variant except V5. The looser duplication radius (V1) changes nothing.
+- **Sensitive:**
+  - The town rule changes the most: city-only keeps only the Mysuru-edge site.
+  - Without the per-settlement cap (V7), 5 of the 7 baseline sites are kept. Two are replaced by sites the cap had excluded, and the budget then binds.
+  - The site count follows the eligibility rules, except when the budget is set below the baseline spend (V6).
+
+**Budget: a ceiling, not an optimisation target.** The design intends budgets to drive allocation: R4-07 core stage 4, the public-cost constraint in R4-16, and the same-budget comparisons in R4-06. A defensible budget optimiser needs an objective measured in benefit per rupee, such as population or demand within reach of a compatible charger. That objective requires located demand (WorldPop is not acquired; registrations show only the registering office) and frozen capacity and accessibility definitions (Part I is open). Neither exists. So **budget optimisation is not implemented**. The slice keeps greedy selection by coverage gap, with the budget used only as a ceiling. "Budget-constrained site selection" stays method only beyond this ceiling.
+
+**Limits:**
+- Coverage gap is a distance proxy, not demand served.
+- No variant is ground truth.
+- Operational feasibility (land, grid, ownership, working chargers) is not tested.
+- The variants are single-rule changes, not a full sensitivity analysis.

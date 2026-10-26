@@ -1,0 +1,9 @@
+variant,why,eligible_candidates,selected_sites,public_cost_inr_lakh,budget_inr_lakh,budget_binding,baseline_sites_kept,selected_osm_ids
+V0_baseline,Committed baseline (parameters file unchanged),31,7,43.974,50,no,7 of 7,node/2354824512 node/13625200300 node/3484040583 way/1234891910 way/1364817960 node/11868283263 node/2467764345
+V1_dup_0.5km,Charger spacing: half the S33 1 km grid side (a looser duplication screen),41,7,43.974,50,no,7 of 7,node/2354824512 node/13625200300 node/3484040583 way/1234891910 way/1364817960 node/11868283263 node/2467764345
+V2_dup_2km,Charger spacing: twice the S33 1 km grid side (a stricter duplication screen),20,6,39.142,50,no,6 of 7,node/2354824512 node/13625200300 node/3484040583 way/1234891910 way/1364817960 node/11868283263
+V3_urban_2km,Town eligibility: tighter urban proxy (2 km from a city or town node),18,6,39.142,50,no,5 of 7,node/2354824512 node/13625200300 node/3484040583 way/1234891910 node/11868283263 node/1165014672
+V4_urban_5km,Town eligibility: looser urban proxy (5 km),50,8,48.806,50,no,6 of 7,node/2354824512 node/13625200300 node/3484040583 way/1234891910 way/1364817960 way/1366275262 node/11868283263 node/8997592562
+V5_city_only,Town eligibility: place=city nodes only (larger urban areas),10,1,4.832,50,no,1 of 7,node/2467764345
+V6_budget_25,"Budget handling: a ceiling below the baseline spend (INR 25 lakh), so the budget binds",31,4,24.403,25,yes,4 of 7,node/2354824512 node/13625200300 node/3484040583 way/1234891910
+V7_no_settlement_cap,"Budget handling: drop the one-site-per-settlement cap, so the INR 50 lakh ceiling can bind",31,7,49.049,50,yes,5 of 7,node/2354824512 node/13625200300 way/1297644796 node/3484040583 way/1234891910 way/1364817960 way/1351250435

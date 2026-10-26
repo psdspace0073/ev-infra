@@ -125,3 +125,22 @@ def test_site_card_states_caveats(built):
     assert "not owner residence" in card
     assert "not a confirmed merge" in card
     assert "modelled, not sanctioned" in card
+
+
+def test_merge_overrides_one_rule_without_mutating_base():
+    out = ps.merge(P, {"urban_proxy": {"radius_km": 5.0}})
+    assert out["urban_proxy"]["radius_km"] == 5.0
+    assert out["urban_proxy"]["place_values"] == P["urban_proxy"]["place_values"]
+    assert P["urban_proxy"]["radius_km"] == 3.0
+
+
+def test_sensitivity_baseline_matches_slice(built):
+    from evinfra.scoring import run_planning_slice_sensitivity as sens
+
+    variants = sens.run()
+    base = variants[0]
+    proposal = rows(built[0]["proposal.csv"])
+    assert base["variant"] == "V0_baseline"
+    assert base["selected_osm_ids"].split() == [p["osm_id"] for p in proposal]
+    for r in variants:
+        assert float(r["public_cost_inr_lakh"]) <= float(r["budget_inr_lakh"])

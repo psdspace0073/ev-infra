@@ -702,9 +702,19 @@ def site_card(
     return "\n".join(lines)
 
 
-def build(params_path: Path = PARAMS) -> tuple[dict[str, bytes], dict]:
+def merge(base: dict, overrides: dict) -> dict:
+    """Recursive dict update for sensitivity variants; the parameters file is not changed."""
+    out = dict(base)
+    for k, v in overrides.items():
+        out[k] = merge(base[k], v) if isinstance(v, dict) and k in base else v
+    return out
+
+
+def build(
+    params_path: Path = PARAMS, overrides: dict | None = None
+) -> tuple[dict[str, bytes], dict]:
     with open(params_path, encoding="utf-8") as f:
-        p = json.load(f)
+        p = merge(json.load(f), overrides or {})
     register = bdt.read_csv(ep.REGISTER)
     inputs = check_inputs(register)
     s18 = bdt.read_csv(PROC / "S18_karnataka_bee_pcs_rows.csv")

@@ -646,13 +646,13 @@ The steps below control the full schedule. Do these first.
 
 ### I.5 Validation metric definitions (R4-19)
 
-- [ ] I-031 Write the duplicate distance (a new site near an existing high-confidence compatible charger).
+- [ ] I-031 Write the duplicate distance (a new site near an existing high-confidence compatible charger). — CC 27 Oct: not frozen; slice uses 1 km (S33), and 0.5 km and 2 km tested as single-rule variants (`docs/submission/PLANNING_SLICE.md`)
 - [ ] I-032 Write the real-plan overlap distance. It is used only if a Karnataka plan is verified; otherwise the metric is "method only / not evaluated".
 - [ ] I-033 Write the population-within-reach definition (WorldPop cells within the accessibility threshold of a compatible charger, at low, central and high).
 - [ ] I-034 Write: EV registrations are observed RTO totals. We do not claim a count of "EVs within reach".
 - [ ] I-035 If you use the EV reach proxy, write its formula and label it "estimated proxy".
 - [ ] I-036 Write the capacity-adequacy definition (estimated demand vs allocatable capacity per zone). Keep it separate from accessibility.
-- [ ] I-037 Write the fixed budget for all method comparisons (in ₹ crore).
+- [ ] I-037 Write the fixed budget for all method comparisons (in ₹ crore). — CC 27 Oct: not frozen; slice budget INR 50 lakh is illustrative and used only as a ceiling; budget optimisation not implemented (no located-demand objective)
 - [ ] I-038 Write the cost metric: public cost per site and per unit of population reached.
 
 ### I.6 Other parameters
